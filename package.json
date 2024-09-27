@@ -1,10 +1,12 @@
 {
 	"name": "einvoice-eu",
 	"version": "0.0.1",
-	"description": "",
-	"author": "",
-	"private": true,
-	"license": "UNLICENSED",
+	"description": "Tools for generating EN16931 conforming electronic invoices",
+	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
+	"license": "WTFPL",
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"build": "nest build",
 		"format": "prettier --write *.json *.md \"src/**/*.ts\" \"test/**/*.ts\"",
