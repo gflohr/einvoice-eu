@@ -1,1 +1,1 @@
-bun run test:cov -- --since origin/main
+bun run test:cov
