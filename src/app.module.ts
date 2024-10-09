@@ -1,13 +1,11 @@
 /* istanbul ignore file */
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MappingService } from './mapping/mapping.service';
 import { MappingModule } from './mapping/mapping.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
-	imports: [MappingModule],
-	controllers: [AppController],
-	providers: [AppService, MappingService],
+	imports: [MappingModule, InvoiceModule],
+	providers: [MappingService],
 })
 export class AppModule {}
