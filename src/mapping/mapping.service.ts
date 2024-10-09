@@ -4,12 +4,21 @@ import * as fs from 'fs/promises';
 import * as v from 'valibot';
 import * as yaml from 'js-yaml';
 
+const LocationSchema = v.pipe(
+	v.string('A location must be a string'),
+	v.regex(/^([^'][^[\]*?:/\\]+[^']|\/.+)$/),
+	v.description(
+		'A location must be a valid LibreOffice sheet name followed by a dot' +
+			' and a cell name or a literal value starting with a slash.',
+	),
+);
+
 const MappingSchema = v.object({
 	meta: v.object({
 		loopColumn: v.string('The loop column must be a string.'),
 	}),
 	mapping: v.object({
-		id: v.string('The id location must be a string.'),
+		id: LocationSchema,
 	}),
 });
 
@@ -19,19 +28,13 @@ export type Mapping = v.InferOutput<typeof MappingSchema>;
 export class MappingService {
 	private readonly logger = new Logger(MappingService.name);
 
-	async loadMapping(id: string): Promise<Mapping | null> {
+	async loadMapping(id: string): Promise<Mapping> {
 		const filename = path.join('resources', 'mappings', id + '.yaml');
 
-		try {
-			const content = await fs.readFile(filename, 'utf8');
-			const data = yaml.load(content);
+		const content = await fs.readFile(filename, 'utf8');
+		const data = yaml.load(content);
 
-			return this.validateMapping(data);
-		} catch (e) {
-			this.logger.error(`error loading mapping '${filename}': ${e}`);
-
-			return null;
-		}
+		return this.validateMapping(data);
 	}
 
 	private validateMapping(data: unknown): Mapping {

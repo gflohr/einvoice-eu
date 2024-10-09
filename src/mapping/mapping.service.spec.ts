@@ -1,13 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MappingService } from './mapping.service';
 import * as fs from 'fs/promises';
-import { Logger } from '@nestjs/common';
 
 jest.mock('fs/promises');
 
 describe('MappingService', () => {
 	let service: MappingService;
-	let loggerErrorSpy: jest.SpyInstance;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -15,7 +13,6 @@ describe('MappingService', () => {
 		}).compile();
 
 		service = module.get<MappingService>(MappingService);
-		loggerErrorSpy = jest.spyOn(Logger.prototype, 'error').mockImplementation();
 
 		jest.resetAllMocks();
 	});
@@ -46,16 +43,15 @@ describe('MappingService', () => {
 		expect(validateMock).toHaveBeenCalledTimes(1);
 	});
 
-	it('should return null and log an error if the mapping does not exist', async () => {
+	it('should throw an exception if the mapping does not exist', async () => {
 		const id = 'custom';
 		const errorMessage = 'No such file or directory';
 
 		const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>;
 		readFileMock.mockRejectedValue(new Error(errorMessage));
 
-		const got = await service.loadMapping(id);
+		await expect(service.loadMapping(id)).rejects.toThrow(errorMessage);
 
-		expect(loggerErrorSpy).toHaveBeenCalledTimes(1);
-		expect(got).toBeNull();
+		expect(readFileMock).toHaveBeenCalledTimes(1);
 	});
 });
