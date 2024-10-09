@@ -1,0 +1,19 @@
+type: object
+properties:
+  cbc:ID:
+    type: string
+    cii:
+    - rsm:ExchangedDocument
+    - ram:ID
+  cac:InvoiceLine:
+    type: array
+    items:
+      type: object
+      properties:
+        cbc:ID:
+          type: string
+          cii:
+            - rsm:SupplyChainTradeTransaction
+            - ram:IncludedSupplyChainTradeLineItem
+            - ram:AssociatedDocumentLineDocument
+            - ram:LineID

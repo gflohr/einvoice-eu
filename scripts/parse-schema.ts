@@ -22,20 +22,26 @@ function filterSchema(schema: any, path: Array<string> = []): any {
 		const newObj: any = {};
 
 		for (const key in schema) {
-			if (key === 'properties' && typeof schema[key] === 'object' && schema[key] !== null) {
+			if (
+				key === 'properties' &&
+				typeof schema[key] === 'object' &&
+				schema[key] !== null
+			) {
 				newObj[key] = {};
 				for (const propKey in schema[key]) {
 					const [ns, name] = propKey.split(':', 2);
 
 					path.push(name);
+					if (schema[key][propKey]['type'] === 'array') {
+						path[path.length - 1] += '[]';
+					}
 					const fullPath = path.join('.');
 					console.log(fullPath);
 					newObj[key][name] = filterSchema(schema[key][propKey], path);
 					path.pop();
 				}
 			} else {
-				// For all other keys, copy them as-is
-				newObj[key] = filterSchema(schema[key]);
+				newObj[key] = filterSchema(schema[key], path);
 			}
 		}
 
