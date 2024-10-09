@@ -54,4 +54,15 @@ describe('MappingService', () => {
 
 		expect(readFileMock).toHaveBeenCalledTimes(1);
 	});
+
+	it('should throw an error if the mapping is invalid', async () => {
+		const id = 'default';
+		const yaml = 'meta: something';
+		const errorMessage = new RegExp('^Invalid type');
+
+		const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>;
+		readFileMock.mockResolvedValue(yaml);
+
+		await expect(service.loadMapping(id)).rejects.toThrow(errorMessage);
+	});
 });
