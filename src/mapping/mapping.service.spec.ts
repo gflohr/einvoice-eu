@@ -26,10 +26,15 @@ describe('MappingService', () => {
 
 	it('should load a mapping', async () => {
 		const id = 'default';
-		const wanted = 'mock yaml content';
+		const yaml = 'meta: something';
 
 		const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>;
-		readFileMock.mockResolvedValue(wanted);
+		readFileMock.mockResolvedValue(yaml);
+
+		const wanted = { meta: 'something' };
+		const validateMock = jest
+			.spyOn(service as any, 'validateMapping')
+			.mockReturnValue(wanted);
 
 		const got = await service.loadMapping(id);
 
@@ -38,6 +43,7 @@ describe('MappingService', () => {
 			`resources/mappings/${id}.yaml`,
 			'utf8',
 		);
+		expect(validateMock).toHaveBeenCalledTimes(1);
 	});
 
 	it('should return null and log an error if the mapping does not exist', async () => {
