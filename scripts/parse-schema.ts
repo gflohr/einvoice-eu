@@ -16,6 +16,9 @@ async function parseSchema(): Promise<void> {
 }
 
 function filterSchema(schema: any, path: Array<string> = []): any {
+	// FIXME! Instead of looking for a key 'properties', we have to look for
+	// objects that have a key 'type'.  From these objects, the 'cii'
+	// properties have to be rememembered, and then deleted.
 	if (Array.isArray(schema)) {
 		return schema.map(filterSchema);
 	} else if (typeof schema === 'object' && schema !== null) {

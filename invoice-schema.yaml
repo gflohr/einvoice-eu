@@ -1,3 +1,14 @@
+# This file contains a superset of a JSON schema for the input data for
+# creating an electronic invoice.  The difference is that nodes in this
+# document have an additional key that specifies the target path into CII
+# objects.
+#
+# From this file, a number of other source files are generated.  See `Makefile`
+# for details!
+#
+# Property names that contain an '@' are mapped into XML attributes.
+#
+# Every node of the tree must have a `cii` property!
 type: object
 properties:
   cbc:ID:
