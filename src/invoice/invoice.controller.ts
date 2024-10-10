@@ -11,7 +11,7 @@ export class InvoiceController {
 
 	@Post('generate')
 	@ApiBody({ type: GenerateInvoiceDto })
-	@ApiOperation({ summary: 'Generate an Invoice'})
+	@ApiOperation({ summary: 'Generate an Invoice' })
 	@ApiResponse({
 		status: HttpStatus.OK,
 		description: 'The generated invoice as XML',

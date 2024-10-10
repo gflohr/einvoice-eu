@@ -16,6 +16,21 @@ properties:
     cii:
     - rsm:ExchangedDocument
     - ram:ID
+  cac:InvoicePeriod:
+    type: object
+    properties:
+      cbc:StartDate:
+        type: string
+        cii:
+        - TODO
+      cbc:EndDate:
+        type: string
+        cii:
+        - TODO
+      cbc:DescriptionCode:
+        type: string
+        cii:
+        - TODO
   cac:InvoiceLine:
     type: array
     items:
@@ -24,7 +39,7 @@ properties:
         cbc:ID:
           type: string
           cii:
-            - rsm:SupplyChainTradeTransaction
-            - ram:IncludedSupplyChainTradeLineItem
-            - ram:AssociatedDocumentLineDocument
-            - ram:LineID
+          - rsm:SupplyChainTradeTransaction
+          - ram:IncludedSupplyChainTradeLineItem
+          - ram:AssociatedDocumentLineDocument
+          - ram:LineID
