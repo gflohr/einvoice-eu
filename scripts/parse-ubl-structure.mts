@@ -32,7 +32,7 @@ for (const element of structure) {
 		element.Element = element.Document;
 		delete element.Document;
 		const tree = buildTree(element.Element);
-		console.log(JSON.stringify(buildSchema(tree), null, 2));
+		console.log(JSON.stringify(buildSchema(tree), null, '\t'));
 		process.exit(0);
 	}
 }
@@ -112,6 +112,13 @@ function processNode(node: Element): JSONSchemaType<object> {
 			properties,
 			...(required.length > 0 && { required }),
 		} as JSONSchemaType<any>;
+
+		if ('Name' in node) {
+			schema.title = node.Name;
+		}
+		if ('Description' in node) {
+			schema.description = node.Description;
+		}
 	}
 
 	// If it's an array (max > 1 or max is infinite), modify the schema
