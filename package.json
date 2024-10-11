@@ -39,6 +39,7 @@
     "@types/got": "^9.6.12",
     "@types/jsdom": "^21.1.7",
     "@types/xml2js": "^0.4.14",
+    "ajv": "^8.17.1",
     "class-validator": "^0.14.1",
     "got": "^14.4.3",
     "js-yaml": "^4.1.0",
