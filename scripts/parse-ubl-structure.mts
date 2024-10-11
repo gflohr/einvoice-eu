@@ -91,7 +91,7 @@ function buildSchema(tree: Element): JSONSchemaType<object> {
 }
 
 function processNode(node: Element): JSONSchemaType<object> {
-	const { Term, cardinality, children } = node;
+	const { cardinality, children } = node;
 	const { min, max } = parseCardinality(cardinality);
 	let schema: JSONSchemaType<any> = { type: 'string' };
 
@@ -120,9 +120,13 @@ function processNode(node: Element): JSONSchemaType<object> {
 		schema = {
 			type: 'array',
 			items: schema,
-			minItems: min,
-			...(max !== Infinity ? { maxItems: max } : {}),
 		};
+		if (min > 0) {
+			schema.minItems = min;
+		}
+		if (max !== Infinity) {
+			schema.maxItems = max;
+		}
 	}
 
 	return schema as JSONSchemaType<object>;
