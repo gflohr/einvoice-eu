@@ -7,6 +7,7 @@ interface JSONData {
 
 if (process.argv.length !== 3) {
 	console.error(`usage: ${process.argv[1]} SCHEMA-YAML`);
+	process.exit(1);
 }
 
 parseSchema().then(() => process.exit(0));
@@ -29,10 +30,24 @@ async function parseSchema(): Promise<void> {
  */
 function filterSchema(schema: JSONData, path: Array<string> = []): JSONData {
 	if (typeof schema === 'object') {
-		if ('type' in schema) {
+		if ('type' in schema || '$ref' in schema) {
 			if (schema.type === 'object') {
+				if (
+					!('additionalProperties' in schema && !schema.additionalProperties)
+				) {
+					const formattedPath = path.join('.');
+					throw new Error(
+						`additionalProperties not false at path '${formattedPath}'.`,
+					);
+				}
+
+				if (!('required' in schema)) {
+					const formattedPath = path.join('.');
+					throw new Error(`required not set at path '${formattedPath}'.`);
+				}
+
 				for (const property of Object.keys(schema.properties)) {
-					const [ns, name] = property.split(':', 2);
+					const [, name] = property.split(':', 2);
 					schema.properties[name] = schema.properties[property];
 					delete schema.properties[property];
 				}
@@ -45,8 +60,16 @@ function filterSchema(schema: JSONData, path: Array<string> = []): JSONData {
 			}
 		}
 
+		if ('required' in schema) {
+			for (let i = 0; i < schema.required.length; ++i) {
+				schema.required[i] = schema.required[i].replace(/^[^\:]+\:/, '');
+			}
+		}
+
 		for (const key of Object.keys(schema)) {
-			filterSchema(schema[key], [...path, key]);
+			if (key !== '$defs') {
+				filterSchema(schema[key], [...path, key]);
+			}
 		}
 	}
 

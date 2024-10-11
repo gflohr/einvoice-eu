@@ -9,15 +9,21 @@
 # Property names that contain an '@' are mapped into XML attributes.
 #
 # Every node of the tree must have a `cii` property!
+$id: https://www.cantanea.com/schemas/invoice-document-v0.1.0
+$schema: http://json-schema.org/draft-07/schema#
+title: Invoice Document
 type: object
+additionalProperties: false
 properties:
   cbc:ID:
     type: string
     cii:
+    - rsm:CrossIndustryInvoice
     - rsm:ExchangedDocument
     - ram:ID
   cac:InvoicePeriod:
     type: object
+    additionalProperties: false
     properties:
       cbc:StartDate:
         type: string
@@ -31,15 +37,43 @@ properties:
         type: string
         cii:
         - TODO
+    required: []
+    anyOf:
+      - required:
+        - cbc:StartDate
+      - required:
+        - cbc:EndDate
   cac:InvoiceLine:
     type: array
+    minItems: 1
     items:
       type: object
+      additionalProperties: false
       properties:
         cbc:ID:
           type: string
           cii:
+          - rsm:CrossIndustryInvoice
           - rsm:SupplyChainTradeTransaction
           - ram:IncludedSupplyChainTradeLineItem
           - ram:AssociatedDocumentLineDocument
           - ram:LineID
+        cac:LineExtensionAmount:
+          $ref: '#/$defs/Amount'
+          cii:
+          - rsm:CrossIndustryInvoice
+          - rsm:SupplyChainTradeTransaction
+          - ram:ApplicableHeaderTradeSettlement
+          - ram:SpecifiedTradeSettlementHeaderMonetarySummation
+          - ram:LineTotalAmount
+      required:
+      - cbc:ID
+      - cad:LineExtensionAmount
+required:
+  - cbc:ID
+  - cbc:InvoiceLine
+$defs:
+  Amount:
+    type: number
+    multipleOf: 0.01
+    minimum: 0
