@@ -3,6 +3,14 @@
 import * as fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
 
+type Element = {
+	Term: string;
+	Name?: string;
+	Description?: string;
+	DataType?: string;
+	Element?: Array<Element>;
+};
+
 const parser = new XMLParser({
 	ignoreAttributes: false,
 	preserveOrder: true,
@@ -16,9 +24,52 @@ for (const element of structure) {
 	if ('Document' in element) {
 		element.Element = element.Document;
 		delete element.Document;
-		console.log(JSON.stringify(element, null, '\t'));
-		break;
+		console.log(JSON.stringify(element.Element, null, '\t'));
+		const tree = buildTree(element.Element);
+		console.log(JSON.stringify(tree, null, 2));
+		process.exit(0);
 	}
+}
+
+throw new Error(`error parsing '${rootFilename}'`);
+
+function buildTree(element: any): Element {
+	const tree:Element = {} as Element;
+
+	for (const node of element) {
+		if (typeof node === 'object') {
+			if ('Term' in node) {
+				tree.Term = node.Term[0]['#text'];
+			} else if ('Name' in node) {
+				tree.Name = node.Name[0]['#text'];
+			} else if ('Description' in node) {
+				tree.Description = node.Description[0]['#text'];
+			} else if ('DataType' in node) {
+				tree.DataType = node.DataType[0]['#text'];
+			} else if ('Element' in node) {
+				tree.Element ??= [];
+				tree.Element.push(buildTree(node.Element));
+			}
+		}
+	}
+
+	return tree;
+}
+
+function buildSchema(root: any) {
+	const result = {
+		type: 'object',
+		properties: {},
+		required: [],
+	};
+
+	//result.properties[root.elementName] = processNode(root);
+
+	//if (parseCardinality(root.cardinality).min === 1) {
+	//	result.required.push(root.elementName);
+	//}
+
+	return result;
 }
 
 function readXml(parser: XMLParser, filename: string): any {
