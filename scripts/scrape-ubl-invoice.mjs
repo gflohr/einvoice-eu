@@ -18,7 +18,9 @@ getHTML().then(html => {
 });
 
 function parseCardinality(cardinality) {
-	const [min, max] = cardinality.split('..').map(c => (c === 'n' ? Infinity : parseInt(c, 10)));
+	const [min, max] = cardinality
+		.split('..')
+		.map(c => (c === 'n' ? Infinity : parseInt(c, 10)));
 	return { min, max };
 }
 
@@ -42,7 +44,7 @@ function processNode(node) {
 		schema = {
 			type: 'object',
 			properties,
-			...(required.length > 0 && { required })
+			...(required.length > 0 && { required }),
 		};
 	}
 
@@ -52,7 +54,7 @@ function processNode(node) {
 			type: 'array',
 			items: schema,
 			minItems: min,
-			...(max !== Infinity ? { maxItems: max } : {})
+			...(max !== Infinity ? { maxItems: max } : {}),
 		};
 	}
 
@@ -63,7 +65,7 @@ function buildSchema(root) {
 	const result = {
 		type: 'object',
 		properties: {},
-		required: []
+		required: [],
 	};
 
 	result.properties[root.elementName] = processNode(root);
@@ -131,7 +133,8 @@ function getRows(html) {
 		let depth = tokens.filter(item => item === '•').length;
 		// Promote attributes.
 		if (elementName[0] === '@') {
-			elementName = rows[rows.length - 1].elementName.replace(/.*@/, '') + elementName;
+			elementName =
+				rows[rows.length - 1].elementName.replace(/.*@/, '') + elementName;
 			if (cardinality === 'M') {
 				cardinality = '1..1';
 			} else if (cardinality === 'O') {
