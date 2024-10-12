@@ -1,0 +1,10 @@
+{
+	"ubl:Invoice": {
+		"cbc:CustomizationID": "urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0",
+		"cbc:ProfileID": "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
+		"cbc:IssueDate": "2024-10-12",
+		"cbc:InvoiceTypeCode": "380",
+		"cbc:DocumentCurrencyCode": "EURos",
+		"cbc:ID": "1234567890"
+	}
+}
