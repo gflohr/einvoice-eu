@@ -4,6 +4,17 @@ import * as fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
 import { JSONSchemaType } from 'ajv';
 
+// Data types:
+// - Amount: number >= zero, max. 2 decimal digits.
+// - Binary object: Base64 string
+// - Code
+// - Date
+// - Document Reference
+// - Identifier
+// - Percentage
+// - Quantity
+// - Text
+
 type Cardinality = {
 	min: number;
 	max: number;
@@ -14,6 +25,7 @@ type Element = {
 	Name?: string;
 	Description?: string;
 	DataType?: string;
+	CodeList?: string;
 	children?: Array<Element>;
 	cardinality?: string;
 };
@@ -52,6 +64,8 @@ function buildTree(element: any): Element {
 				tree.Description = node.Description[0]['#text'];
 			} else if ('DataType' in node) {
 				tree.DataType = node.DataType[0]['#text'];
+			} else if ('Reference' in node && ':@' in node && 'CODE_LIST' == node[':@']['@_type']) {
+				tree.CodeList = node.Reference[0]['#text'];
 			} else if ('Attribute' in node) {
 				const attribute = buildTree(node.Attribute);
 				attribute.Term = `${tree.Term}@${attribute.Term}`;
@@ -93,7 +107,16 @@ function buildSchema(tree: Element): JSONSchemaType<object> {
 function processNode(node: Element): JSONSchemaType<object> {
 	const { cardinality, children } = node;
 	const { min, max } = parseCardinality(cardinality);
-	let schema: JSONSchemaType<any> = { type: 'string' };
+	const common: { [key: string]: string } = {};
+
+	if ('Name' in node) {
+		common.title = node.Name as string;
+	}
+	if ('Description' in node) {
+		common.description = node.Description as string;
+	}
+
+	let schema: JSONSchemaType<any> = { type: 'string', ...common };
 
 	// If the node has children, it's an object with properties
 	if (children && children.length > 0) {
@@ -109,16 +132,10 @@ function processNode(node: Element): JSONSchemaType<object> {
 
 		schema = {
 			type: 'object',
+			...common,
 			properties,
 			...(required.length > 0 && { required }),
 		} as JSONSchemaType<any>;
-
-		if ('Name' in node) {
-			schema.title = node.Name;
-		}
-		if ('Description' in node) {
-			schema.description = node.Description;
-		}
 	}
 
 	// If it's an array (max > 1 or max is infinite), modify the schema
