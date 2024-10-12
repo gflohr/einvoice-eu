@@ -10,19 +10,43 @@
 			"cac:Party": {
 				"cbc:EndpointID": "DE16520503531004885412",
 				"cbc:EndpointID@schemeID": "9918",
-				"cac:PostalAddress": {},
-				"cac:PartyLegalEntity": {}
+				"cac:PostalAddress": {
+					"cac:Country": {
+						"cbc:IdentificationCode": "DE"
+					}
+				},
+				"cac:PartyLegalEntity": {
+					"cbc:RegistrationName": "Globex Corp."
+				}
 			}
 		},
 		"cac:AccountingCustomerParty": {
 			"cac:Party": {
 				"cbc:EndpointID": "DE279247134",
-				"cbc:EndpointID@schemeID": "9930"
+				"cbc:EndpointID@schemeID": "9930",
+				"cac:PostalAddress": {
+					"cac:Country": {
+						"cbc:IdentificationCode": "DE"
+					}
+				},
+				"cac:PartyLegalEntity": {
+					"cbc:RegistrationName": "Acme Ltd."
+				}
 			}
 		},
-		"cac:TaxTotal": {},
+		"cac:TaxTotal": [{
+			"cbc:TaxAmount": 437.93,
+			"cbc:TaxAmount@currencyID": "EUR"
+		}],
 		"cac:MonetaryTotal": {},
-		"cac:LegalMonetaryTotal": {},
+		"cac:LegalMonetaryTotal": {
+			"cbc:LineExtensionAmount": 2304.89,
+			"cbc:LineExtensionAmount@currencyID": "EUR",
+			"cbc:TaxExclusiveAmount": 2304.89,
+			"cbc:TaxExclusiveAmount@currencyID": "EUR",
+			"cbc:TaxInclusiveAmount": 2778.82,
+			"cbc:TaxInclusiveAmount@currencyID": "EUR"
+		},
 		"cac:InvoiceLine": {}
 	}
 }
