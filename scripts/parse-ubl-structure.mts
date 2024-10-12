@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
 import * as fs from 'fs';
+import * as path from 'path';
 import { XMLParser } from 'fast-xml-parser';
 import { JSONSchemaType } from 'ajv';
 
@@ -36,7 +37,9 @@ const parser = new XMLParser({
 	alwaysCreateTextNode: false,
 });
 
+const codeLists: { [key: string]: { enum: Array<string> } } = {};
 const $defs = {
+	codeLists,
 	dataTypes: {
 		Amount: {
 			type: 'number',
@@ -66,6 +69,9 @@ const $defs = {
 		},
 	}
 };
+
+const codeListDir = 'peppol-bis-invoice-3/structure/codelist';
+loadCodeLists(codeListDir);
 
 const rootFilename = 'peppol-bis-invoice-3/structure/syntax/ubl-invoice.xml';
 const basedir = rootFilename.substring(0, rootFilename.lastIndexOf('/'));
@@ -133,7 +139,7 @@ function buildSchema(tree: Element): JSONSchemaType<object> {
 		(result.required as unknown as string[]).push(tree.Term);
 	}
 
-	return result as JSONSchemaType<object>;
+	return result as unknown as JSONSchemaType<object>;
 }
 
 function processNode(node: Element): JSONSchemaType<object> {
@@ -150,7 +156,9 @@ function processNode(node: Element): JSONSchemaType<object> {
 
 	let schema: JSONSchemaType<any>;
 
-	if (node.DataType && node.DataType in $defs.dataTypes) {
+	if (node.CodeList) {
+		schema = { type: 'string', $ref: `#/$defs/codeLists/${node.CodeList}`, ...common };
+	} else if (node.DataType && node.DataType in $defs.dataTypes) {
 		schema = { '$ref': `#/$defs/dataTypes/${node.DataType}`} as JSONSchemaType<any>;
 	} else {
 		schema = { type: 'string', ...common };
@@ -230,4 +238,31 @@ function parseCardinality(cardinality: string | undefined): Cardinality {
 		.map(c => (c === 'n' ? Infinity : parseInt(c, 10)));
 
 	return { min, max };
+}
+
+function loadCodeLists(dir: string) {
+	const pattern = new RegExp('.+\.xml$');
+	const filenames = fs.readdirSync(dir)
+		.filter(filename => pattern.test(filename))
+		.map(filename => path.join(dir, filename));
+	const codeListParser = new XMLParser();
+	for (const filename of filenames) {
+		loadCodeList(codeListParser, filename);
+	}
+}
+
+function loadCodeList(parser: XMLParser, filename: string) {
+	const data = readXml(parser, filename);
+	const id = data.CodeList.Identifier;
+	let codeElements = data.CodeList.Code;
+	if (!Array.isArray(codeElements)) {
+		codeElements = [codeElements];
+	}
+
+	const codes = [];
+	for (const elem of codeElements) {
+		codes.push(elem.Id.toString());
+	}
+
+	$defs.codeLists[id] = { enum: codes };
 }
