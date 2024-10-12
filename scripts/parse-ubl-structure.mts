@@ -36,6 +36,37 @@ const parser = new XMLParser({
 	alwaysCreateTextNode: false,
 });
 
+const $defs = {
+	dataTypes: {
+		Amount: {
+			type: 'number',
+			multipleOf: 0.01,
+			minimum: 0,
+		},
+		'Binary object': {
+			type: 'string',
+			// This is maybe too restrictive because it does not allow whitespace
+			// but this should be okay for our purposes.
+			pattern: '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)$',
+		},
+		Date: {
+			type: 'string',
+			pattern: '^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$',
+		},
+		Percentage: {
+			type: 'number',
+			// FIXME! The ZUGFeRD documentation states that a percentage must have
+			// a maximum of 4 decimal digts. Is that correct?
+			multipleOf: 0.0001,
+			minimum: 0,
+		},
+		Quantity: {
+			type: 'number',
+			minimum: 0,
+		},
+	}
+};
+
 const rootFilename = 'peppol-bis-invoice-3/structure/syntax/ubl-invoice.xml';
 const basedir = rootFilename.substring(0, rootFilename.lastIndexOf('/'));
 const structure = readXml(parser, rootFilename)[0].Structure;
@@ -93,6 +124,7 @@ function buildSchema(tree: Element): JSONSchemaType<object> {
 		type: 'object',
 		properties: {},
 		required: [],
+		$defs,
 	};
 
 	(result.properties as { [key: string]: any})[tree.Term] = processNode(tree);
@@ -116,7 +148,13 @@ function processNode(node: Element): JSONSchemaType<object> {
 		common.description = node.Description as string;
 	}
 
-	let schema: JSONSchemaType<any> = { type: 'string', ...common };
+	let schema: JSONSchemaType<any>;
+
+	if (node.DataType && node.DataType in $defs.dataTypes) {
+		schema = { '$ref': `#/$defs/dataTypes/${node.DataType}`} as JSONSchemaType<any>;
+	} else {
+		schema = { type: 'string', ...common };
+	}
 
 	// If the node has children, it's an object with properties
 	if (children && children.length > 0) {
