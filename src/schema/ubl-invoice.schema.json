@@ -193,17 +193,15 @@
 						"description": "A group of business terms providing information about additional supporting documents substantiating the claims made in the Invoice.\n            The additional supporting documents can be used for both referencing a document number which is expected to be known by the receiver, \n            an external document (referenced by a URL) or as an embedded document, Base64 encoded (such as a time report).",
 						"properties": {
 							"cbc:ID": {
-								"type": "object",
+								"type": "string",
 								"title": "Invoiced object identifier, Supporting document reference",
-								"description": "An identifier for an object on which the invoice is based, given by the Seller, or the identifier for the supporting document.",
-								"properties": {
-									"cbc:ID@schemeID": {
-										"type": "string",
-										"$ref": "#/$defs/codeLists/UNCL1153",
-										"title": "Scheme identifier",
-										"description": "The identification scheme identifier of the Invoiced object identifier."
-									}
-								}
+								"description": "An identifier for an object on which the invoice is based, given by the Seller, or the identifier for the supporting document."
+							},
+							"cbc:ID@schemeID": {
+								"type": "string",
+								"$ref": "#/$defs/codeLists/UNCL1153",
+								"title": "Scheme identifier",
+								"description": "The identification scheme identifier of the Invoiced object identifier."
 							},
 							"cbc:DocumentTypeCode": {
 								"type": "string",
@@ -220,26 +218,18 @@
 								"title": "ATTACHMENT",
 								"properties": {
 									"cbc:EmbeddedDocumentBinaryObject": {
-										"type": "object",
-										"title": "Attached document",
-										"description": "An attached document embedded as binary object (Base64) or sent together with the invoice.",
-										"properties": {
-											"cbc:EmbeddedDocumentBinaryObject@mimeCode": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/MimeCode",
-												"title": "Attached document Mime code",
-												"description": "The mime code of the attached document."
-											},
-											"cbc:EmbeddedDocumentBinaryObject@filename": {
-												"type": "string",
-												"title": "Attached document Filename",
-												"description": "The file name of the attached document"
-											}
-										},
-										"required": [
-											"cbc:EmbeddedDocumentBinaryObject@mimeCode",
-											"cbc:EmbeddedDocumentBinaryObject@filename"
-										]
+										"$ref": "#/$defs/dataTypes/Binary object"
+									},
+									"cbc:EmbeddedDocumentBinaryObject@mimeCode": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/MimeCode",
+										"title": "Attached document Mime code",
+										"description": "The mime code of the attached document."
+									},
+									"cbc:EmbeddedDocumentBinaryObject@filename": {
+										"type": "string",
+										"title": "Attached document Filename",
+										"description": "The file name of the attached document"
 									},
 									"cac:ExternalReference": {
 										"type": "object",
@@ -255,7 +245,11 @@
 											"cbc:URI"
 										]
 									}
-								}
+								},
+								"required": [
+									"cbc:EmbeddedDocumentBinaryObject@mimeCode",
+									"cbc:EmbeddedDocumentBinaryObject@filename"
+								]
 							}
 						},
 						"required": [
@@ -287,20 +281,15 @@
 							"title": "PARTY",
 							"properties": {
 								"cbc:EndpointID": {
-									"type": "object",
+									"type": "string",
 									"title": "Seller electronic address",
-									"description": "Identifies the Seller's electronic address to which the application level response to the invoice may be delivered.",
-									"properties": {
-										"cbc:EndpointID@schemeID": {
-											"type": "string",
-											"$ref": "#/$defs/codeLists/eas",
-											"title": "Seller electronic address identification scheme identifier",
-											"description": "The identification scheme identifier of the Seller electronic address"
-										}
-									},
-									"required": [
-										"cbc:EndpointID@schemeID"
-									]
+									"description": "Identifies the Seller's electronic address to which the application level response to the invoice may be delivered."
+								},
+								"cbc:EndpointID@schemeID": {
+									"type": "string",
+									"$ref": "#/$defs/codeLists/eas",
+									"title": "Seller electronic address identification scheme identifier",
+									"description": "The identification scheme identifier of the Seller electronic address"
 								},
 								"cac:PartyIdentification": {
 									"type": "array",
@@ -309,17 +298,15 @@
 										"title": "PARTY IDENTIFICATION",
 										"properties": {
 											"cbc:ID": {
-												"type": "object",
+												"type": "string",
 												"title": "Seller identifier or bank assigned creditor identifier",
-												"description": "This element is used for both the identification of the Seller, or the unique banking reference identifier of Seller (assigned by the Seller bank.). For seller identification use ICD code list, for SEPA bank assigned creditor reference, use SEPA.\n                     In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present",
-												"properties": {
-													"cbc:ID@schemeID": {
-														"type": "string",
-														"$ref": "#/$defs/codeLists/SEPA",
-														"title": "Seller or bank assigned creditor identifier identification scheme identifier",
-														"description": "The identification scheme identifier of the Seller identifier. For bank assigned creditor identifier (BT-90), value MUST be \"SEPA\""
-													}
-												}
+												"description": "This element is used for both the identification of the Seller, or the unique banking reference identifier of Seller (assigned by the Seller bank.). For seller identification use ICD code list, for SEPA bank assigned creditor reference, use SEPA.\n                     In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present"
+											},
+											"cbc:ID@schemeID": {
+												"type": "string",
+												"$ref": "#/$defs/codeLists/SEPA",
+												"title": "Seller or bank assigned creditor identifier identification scheme identifier",
+												"description": "The identification scheme identifier of the Seller identifier. For bank assigned creditor identifier (BT-90), value MUST be \"SEPA\""
 											}
 										},
 										"required": [
@@ -447,17 +434,15 @@
 											"description": "The full formal name by which the Seller is registered in the national registry of legal entities\n                        or as a Taxable person or otherwise trades as a person or persons."
 										},
 										"cbc:CompanyID": {
-											"type": "object",
+											"type": "string",
 											"title": "Seller legal registration identifier",
-											"description": "An identifier issued by an official registrar that identifies the Seller as a legal entity or\n                        person. In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present",
-											"properties": {
-												"cbc:CompanyID@schemeID": {
-													"type": "string",
-													"$ref": "#/$defs/codeLists/ICD",
-													"title": "Seller legal registration identifier identification scheme identifier",
-													"description": "The identification scheme identifier of the Seller legal registration identifier."
-												}
-											}
+											"description": "An identifier issued by an official registrar that identifies the Seller as a legal entity or\n                        person. In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present"
+										},
+										"cbc:CompanyID@schemeID": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/ICD",
+											"title": "Seller legal registration identifier identification scheme identifier",
+											"description": "The identification scheme identifier of the Seller legal registration identifier."
 										},
 										"cbc:CompanyLegalForm": {
 											"type": "string",
@@ -494,6 +479,7 @@
 							},
 							"required": [
 								"cbc:EndpointID",
+								"cbc:EndpointID@schemeID",
 								"cac:PostalAddress",
 								"cac:PartyLegalEntity"
 							]
@@ -513,37 +499,30 @@
 							"title": "PARTY",
 							"properties": {
 								"cbc:EndpointID": {
-									"type": "object",
+									"type": "string",
 									"title": "Buyer electronic address",
-									"description": "Identifies the Buyer's electronic address to which the invoice is delivered.",
-									"properties": {
-										"cbc:EndpointID@schemeID": {
-											"type": "string",
-											"$ref": "#/$defs/codeLists/eas",
-											"title": "Buyer electronic address identification scheme identifier",
-											"description": "The identification scheme identifier of the Buyer electronic address."
-										}
-									},
-									"required": [
-										"cbc:EndpointID@schemeID"
-									]
+									"description": "Identifies the Buyer's electronic address to which the invoice is delivered."
+								},
+								"cbc:EndpointID@schemeID": {
+									"type": "string",
+									"$ref": "#/$defs/codeLists/eas",
+									"title": "Buyer electronic address identification scheme identifier",
+									"description": "The identification scheme identifier of the Buyer electronic address."
 								},
 								"cac:PartyIdentification": {
 									"type": "object",
 									"title": "PARTY IDENTIFICATION",
 									"properties": {
 										"cbc:ID": {
-											"type": "object",
+											"type": "string",
 											"title": "Buyer identifier",
-											"description": "An identifier of the Buyer.",
-											"properties": {
-												"cbc:ID@schemeID": {
-													"type": "string",
-													"$ref": "#/$defs/codeLists/ICD",
-													"title": "Buyer identifier identification scheme identifier",
-													"description": "The identification scheme identifier of the Buyer identifier."
-												}
-											}
+											"description": "An identifier of the Buyer."
+										},
+										"cbc:ID@schemeID": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/ICD",
+											"title": "Buyer identifier identification scheme identifier",
+											"description": "The identification scheme identifier of the Buyer identifier."
 										}
 									},
 									"required": [
@@ -666,17 +645,15 @@
 											"description": "The full name of the Buyer."
 										},
 										"cbc:CompanyID": {
-											"type": "object",
+											"type": "string",
 											"title": "Buyer legal registration identifier",
-											"description": "An identifier issued by an official registrar that identifies the Buyer as a legal entity or\n                        person.",
-											"properties": {
-												"cbc:CompanyID@schemeID": {
-													"type": "string",
-													"$ref": "#/$defs/codeLists/ICD",
-													"title": "Buyer legal registration identifier identification scheme identifier",
-													"description": "The identification scheme identifier of the Buyer legal registration identifier."
-												}
-											}
+											"description": "An identifier issued by an official registrar that identifies the Buyer as a legal entity or\n                        person."
+										},
+										"cbc:CompanyID@schemeID": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/ICD",
+											"title": "Buyer legal registration identifier identification scheme identifier",
+											"description": "The identification scheme identifier of the Buyer legal registration identifier."
 										}
 									},
 									"required": [
@@ -708,6 +685,7 @@
 							},
 							"required": [
 								"cbc:EndpointID",
+								"cbc:EndpointID@schemeID",
 								"cac:PostalAddress",
 								"cac:PartyLegalEntity"
 							]
@@ -727,17 +705,15 @@
 							"title": "PARTY IDENTIFICATION",
 							"properties": {
 								"cbc:ID": {
-									"type": "object",
+									"type": "string",
 									"title": "Payee identifier or bank assigned creditor identifier",
-									"description": "This element is used for both the identification of the Payee, or the unique banking reference identifier of Payee (assigned by the Payee bank.) For payee identification use ICD code list, for SEPA bank assigned creditor reference, use SEPA.",
-									"properties": {
-										"cbc:ID@schemeID": {
-											"type": "string",
-											"$ref": "#/$defs/codeLists/SEPA",
-											"title": "Payee or bank assigned creditor identifier identification scheme identifier",
-											"description": "The identification scheme identifier of the payee identifier. For bank assigned creditor identifier (BT-90), value MUST be \"SEPA\""
-										}
-									}
+									"description": "This element is used for both the identification of the Payee, or the unique banking reference identifier of Payee (assigned by the Payee bank.) For payee identification use ICD code list, for SEPA bank assigned creditor reference, use SEPA."
+								},
+								"cbc:ID@schemeID": {
+									"type": "string",
+									"$ref": "#/$defs/codeLists/SEPA",
+									"title": "Payee or bank assigned creditor identifier identification scheme identifier",
+									"description": "The identification scheme identifier of the payee identifier. For bank assigned creditor identifier (BT-90), value MUST be \"SEPA\""
 								}
 							},
 							"required": [
@@ -763,17 +739,15 @@
 							"title": "PARTY LEGAL ENTITY",
 							"properties": {
 								"cbc:CompanyID": {
-									"type": "object",
+									"type": "string",
 									"title": "Payee legal registration identifier",
-									"description": "An identifier issued by an official registrar that identifies the Payee as a legal entity or\n                    person.",
-									"properties": {
-										"cbc:CompanyID@schemeID": {
-											"type": "string",
-											"$ref": "#/$defs/codeLists/ICD",
-											"title": "Payee legal registration identifier identification scheme identifier",
-											"description": "The identification scheme identifier of the Payee legal registration identifier."
-										}
-									}
+									"description": "An identifier issued by an official registrar that identifies the Payee as a legal entity or\n                    person."
+								},
+								"cbc:CompanyID@schemeID": {
+									"type": "string",
+									"$ref": "#/$defs/codeLists/ICD",
+									"title": "Payee legal registration identifier identification scheme identifier",
+									"description": "The identification scheme identifier of the Payee legal registration identifier."
 								}
 							},
 							"required": [
@@ -915,17 +889,15 @@
 							"type": "object",
 							"properties": {
 								"cbc:ID": {
-									"type": "object",
+									"type": "string",
 									"title": "Deliver to location identifier",
-									"description": "An identifier for the location at which the goods and services are delivered.",
-									"properties": {
-										"cbc:ID@schemeID": {
-											"type": "string",
-											"$ref": "#/$defs/codeLists/ICD",
-											"title": "Deliver to location identifier identification scheme identifier",
-											"description": "The identification scheme identifier of the Deliver to location identifier."
-										}
-									}
+									"description": "An identifier for the location at which the goods and services are delivered."
+								},
+								"cbc:ID@schemeID": {
+									"type": "string",
+									"$ref": "#/$defs/codeLists/ICD",
+									"title": "Deliver to location identifier identification scheme identifier",
+									"description": "The identification scheme identifier of the Deliver to location identifier."
 								},
 								"cac:Address": {
 									"type": "object",
@@ -1026,16 +998,15 @@
 						"description": "A group of business terms providing information about the payment.",
 						"properties": {
 							"cbc:PaymentMeansCode": {
-								"type": "object",
+								"type": "string",
+								"$ref": "#/$defs/codeLists/UNCL4461",
 								"title": "Payment means type code",
-								"description": "The means, expressed as code, for how a payment is expected to be or has been settled.",
-								"properties": {
-									"cbc:PaymentMeansCode@name": {
-										"type": "string",
-										"title": "Payment means text",
-										"description": "The means, expressed as text, for how a payment is expected to be or has been settled."
-									}
-								}
+								"description": "The means, expressed as code, for how a payment is expected to be or has been settled."
+							},
+							"cbc:PaymentMeansCode@name": {
+								"type": "string",
+								"title": "Payment means text",
+								"description": "The means, expressed as text, for how a payment is expected to be or has been settled."
 							},
 							"cbc:PaymentID": {
 								"type": "string",
@@ -1173,34 +1144,20 @@
 								"$ref": "#/$defs/dataTypes/Percentage"
 							},
 							"cbc:Amount": {
-								"type": "object",
-								"title": "Document level allowance or charge amount",
-								"description": "The amount of an allowance or a charge, without VAT. Must be rounded to maximum 2 decimals",
-								"properties": {
-									"cbc:Amount@currencyID": {
-										"type": "string",
-										"$ref": "#/$defs/codeLists/ISO4217",
-										"description": "Mandatory attribute. Use BT-5"
-									}
-								},
-								"required": [
-									"cbc:Amount@currencyID"
-								]
+								"$ref": "#/$defs/dataTypes/Amount"
+							},
+							"cbc:Amount@currencyID": {
+								"type": "string",
+								"$ref": "#/$defs/codeLists/ISO4217",
+								"description": "Mandatory attribute. Use BT-5"
 							},
 							"cbc:BaseAmount": {
-								"type": "object",
-								"title": "Document level allowance or charge base amount",
-								"description": "The base amount that may be used, in conjunction with the document level allowance or charge percentage, to\n                calculate the document level allowance or charge amount. Must be rounded to maximum 2 decimals",
-								"properties": {
-									"cbc:BaseAmount@currencyID": {
-										"type": "string",
-										"$ref": "#/$defs/codeLists/ISO4217",
-										"description": "Mandatory attribute. Use BT-5"
-									}
-								},
-								"required": [
-									"cbc:BaseAmount@currencyID"
-								]
+								"$ref": "#/$defs/dataTypes/Amount"
+							},
+							"cbc:BaseAmount@currencyID": {
+								"type": "string",
+								"$ref": "#/$defs/codeLists/ISO4217",
+								"description": "Mandatory attribute. Use BT-5"
 							},
 							"cac:TaxCategory": {
 								"type": "object",
@@ -1238,6 +1195,8 @@
 						"required": [
 							"cbc:ChargeIndicator",
 							"cbc:Amount",
+							"cbc:Amount@currencyID",
+							"cbc:BaseAmount@currencyID",
 							"cac:TaxCategory"
 						]
 					}
@@ -1250,19 +1209,12 @@
 						"description": "When tax currency code is provided, two instances of the tax total must be present, but only one with tax subtotal.",
 						"properties": {
 							"cbc:TaxAmount": {
-								"type": "object",
-								"title": "Invoice total VAT amount, Invoice total VAT amount in accounting currency",
-								"description": "The total VAT amount for the Invoice or the VAT total amount expressed in the accounting currency accepted or required in the country of\n                the Seller. Must be rounded to maximum 2 decimals",
-								"properties": {
-									"cbc:TaxAmount@currencyID": {
-										"type": "string",
-										"$ref": "#/$defs/codeLists/ISO4217",
-										"description": "Mandatory attribute. Use BT-5 or BT-6."
-									}
-								},
-								"required": [
-									"cbc:TaxAmount@currencyID"
-								]
+								"$ref": "#/$defs/dataTypes/Amount"
+							},
+							"cbc:TaxAmount@currencyID": {
+								"type": "string",
+								"$ref": "#/$defs/codeLists/ISO4217",
+								"description": "Mandatory attribute. Use BT-5 or BT-6."
 							},
 							"cac:TaxSubtotal": {
 								"type": "array",
@@ -1272,34 +1224,20 @@
 									"description": "A group of business terms providing information about VAT breakdown by different categories, rates\n                and exemption reasons",
 									"properties": {
 										"cbc:TaxableAmount": {
-											"type": "object",
-											"title": "VAT category taxable amount",
-											"description": "Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the\n                    VAT category rate is applicable). Must be rounded to maximum 2 decimals.",
-											"properties": {
-												"cbc:TaxableAmount@currencyID": {
-													"type": "string",
-													"$ref": "#/$defs/codeLists/ISO4217",
-													"description": "Mandatory attribute. Use BT-5"
-												}
-											},
-											"required": [
-												"cbc:TaxableAmount@currencyID"
-											]
+											"$ref": "#/$defs/dataTypes/Amount"
+										},
+										"cbc:TaxableAmount@currencyID": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/ISO4217",
+											"description": "Mandatory attribute. Use BT-5"
 										},
 										"cbc:TaxAmount": {
-											"type": "object",
-											"title": "VAT category tax amount",
-											"description": "The total VAT amount for a given VAT category. Must be rounded to maximum 2 decimals.",
-											"properties": {
-												"cbc:TaxAmount@currencyID": {
-													"type": "string",
-													"$ref": "#/$defs/codeLists/ISO4217",
-													"description": "Mandatory attribute. Use BT-5"
-												}
-											},
-											"required": [
-												"cbc:TaxAmount@currencyID"
-											]
+											"$ref": "#/$defs/dataTypes/Amount"
+										},
+										"cbc:TaxAmount@currencyID": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/ISO4217",
+											"description": "Mandatory attribute. Use BT-5"
 										},
 										"cac:TaxCategory": {
 											"type": "object",
@@ -1346,14 +1284,17 @@
 									},
 									"required": [
 										"cbc:TaxableAmount",
+										"cbc:TaxableAmount@currencyID",
 										"cbc:TaxAmount",
+										"cbc:TaxAmount@currencyID",
 										"cac:TaxCategory"
 									]
 								}
 							}
 						},
 						"required": [
-							"cbc:TaxAmount"
+							"cbc:TaxAmount",
+							"cbc:TaxAmount@currencyID"
 						]
 					},
 					"minItems": 1,
@@ -1365,131 +1306,83 @@
 					"description": "A group of business terms providing the monetary totals for the Invoice.",
 					"properties": {
 						"cbc:LineExtensionAmount": {
-							"type": "object",
-							"title": "Sum of Invoice line net amount",
-							"description": "Sum of all Invoice line net amounts in the Invoice. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:LineExtensionAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:LineExtensionAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:LineExtensionAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						},
 						"cbc:TaxExclusiveAmount": {
-							"type": "object",
-							"title": "Invoice total amount without VAT",
-							"description": "The total amount of the Invoice without VAT. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:TaxExclusiveAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:TaxExclusiveAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:TaxExclusiveAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						},
 						"cbc:TaxInclusiveAmount": {
-							"type": "object",
-							"title": "Invoice total amount with VAT",
-							"description": "The total amount of the Invoice with VAT. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:TaxInclusiveAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:TaxInclusiveAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:TaxInclusiveAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						},
 						"cbc:AllowanceTotalAmount": {
-							"type": "object",
-							"title": "Sum of allowances on document level",
-							"description": "Sum of all allowances on document level in the Invoice. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:AllowanceTotalAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:AllowanceTotalAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:AllowanceTotalAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						},
 						"cbc:ChargeTotalAmount": {
-							"type": "object",
-							"title": "Sum of charges on document level",
-							"description": "Sum of all charges on document level in the Invoice. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:ChargeTotalAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:ChargeTotalAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:ChargeTotalAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						},
 						"cbc:PrepaidAmount": {
-							"type": "object",
-							"title": "Paid amount",
-							"description": "The sum of amounts which have been paid in advance. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:PrepaidAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:PrepaidAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:PrepaidAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						},
 						"cbc:PayableRoundingAmount": {
-							"type": "object",
-							"title": "Rounding amount",
-							"description": "The amount to be added to the invoice total to round the amount to be paid. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:PayableRoundingAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:PayableRoundingAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:PayableRoundingAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						},
 						"cbc:PayableAmount": {
-							"type": "object",
-							"title": "Amount due for payment",
-							"description": "The outstanding amount that is requested to be paid. Must be rounded to maximum 2 decimals.",
-							"properties": {
-								"cbc:PayableAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
-							},
-							"required": [
-								"cbc:PayableAmount@currencyID"
-							]
+							"$ref": "#/$defs/dataTypes/Amount"
+						},
+						"cbc:PayableAmount@currencyID": {
+							"type": "string",
+							"$ref": "#/$defs/codeLists/ISO4217",
+							"description": "Mandatory attribute. Use BT-5"
 						}
 					},
 					"required": [
 						"cbc:LineExtensionAmount",
+						"cbc:LineExtensionAmount@currencyID",
 						"cbc:TaxExclusiveAmount",
+						"cbc:TaxExclusiveAmount@currencyID",
 						"cbc:TaxInclusiveAmount",
-						"cbc:PayableAmount"
+						"cbc:TaxInclusiveAmount@currencyID",
+						"cbc:AllowanceTotalAmount@currencyID",
+						"cbc:ChargeTotalAmount@currencyID",
+						"cbc:PrepaidAmount@currencyID",
+						"cbc:PayableRoundingAmount@currencyID",
+						"cbc:PayableAmount",
+						"cbc:PayableAmount@currencyID"
 					]
 				},
 				"cac:InvoiceLine": {
@@ -1510,35 +1403,21 @@
 								"description": "A textual note that gives unstructured information that is relevant to the Invoice line."
 							},
 							"cbc:InvoicedQuantity": {
-								"type": "object",
-								"title": "Invoiced quantity",
-								"description": "The quantity of items (goods or services) that is charged in the Invoice line.",
-								"properties": {
-									"cbc:InvoicedQuantity@unitCode": {
-										"type": "string",
-										"$ref": "#/$defs/codeLists/UNECERec20",
-										"title": "Invoiced quantity unit of measure",
-										"description": "The unit of measure that applies to the invoiced quantity.\n\t\t\t\t\tCodes for unit of packaging from UNECE Recommendation No. 21 can be used in accordance with the descriptions in the \"Intro\" section of UN/ECE Recommendation 20, Revision 11 (2015):\n\t\t\t\t\tThe 2 character alphanumeric code values in UNECE Recommendation 21 shall be used. To avoid duplication with existing code values in UNECE Recommendation No. 20, each code value from UNECE Recommendation 21 shall be prefixed with an “X”, resulting in a 3 alphanumeric code when used as a unit of measure."
-									}
-								},
-								"required": [
-									"cbc:InvoicedQuantity@unitCode"
-								]
+								"$ref": "#/$defs/dataTypes/Quantity"
+							},
+							"cbc:InvoicedQuantity@unitCode": {
+								"type": "string",
+								"$ref": "#/$defs/codeLists/UNECERec20",
+								"title": "Invoiced quantity unit of measure",
+								"description": "The unit of measure that applies to the invoiced quantity.\n\t\t\t\t\tCodes for unit of packaging from UNECE Recommendation No. 21 can be used in accordance with the descriptions in the \"Intro\" section of UN/ECE Recommendation 20, Revision 11 (2015):\n\t\t\t\t\tThe 2 character alphanumeric code values in UNECE Recommendation 21 shall be used. To avoid duplication with existing code values in UNECE Recommendation No. 20, each code value from UNECE Recommendation 21 shall be prefixed with an “X”, resulting in a 3 alphanumeric code when used as a unit of measure."
 							},
 							"cbc:LineExtensionAmount": {
-								"type": "object",
-								"title": "Invoice line net amount",
-								"description": "The total amount of the Invoice line.\n                    The amount is “net” without VAT, i.e. inclusive of line level allowances and charges as well as other relevant taxes.\n                    Must be rounded to maximum 2 decimals.",
-								"properties": {
-									"cbc:LineExtensionAmount@currencyID": {
-										"type": "string",
-										"$ref": "#/$defs/codeLists/ISO4217",
-										"description": "Mandatory attribute. Use BT-5"
-									}
-								},
-								"required": [
-									"cbc:LineExtensionAmount@currencyID"
-								]
+								"$ref": "#/$defs/dataTypes/Amount"
+							},
+							"cbc:LineExtensionAmount@currencyID": {
+								"type": "string",
+								"$ref": "#/$defs/codeLists/ISO4217",
+								"description": "Mandatory attribute. Use BT-5"
 							},
 							"cbc:AccountingCost": {
 								"type": "string",
@@ -1577,17 +1456,15 @@
 								"title": "LINE OBJECT IDENTIFIER",
 								"properties": {
 									"cbc:ID": {
-										"type": "object",
+										"type": "string",
 										"title": "Invoice line object identifier",
-										"description": "An identifier for an object on which the invoice line is based, given by the Seller.",
-										"properties": {
-											"cbc:ID@schemeID": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/UNCL1153",
-												"title": "Invoice line object identifier identification scheme identifier",
-												"description": "The identification scheme identifier of the Invoice line object identifier."
-											}
-										}
+										"description": "An identifier for an object on which the invoice line is based, given by the Seller."
+									},
+									"cbc:ID@schemeID": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/UNCL1153",
+										"title": "Invoice line object identifier identification scheme identifier",
+										"description": "The identification scheme identifier of the Invoice line object identifier."
 									},
 									"cbc:DocumentTypeCode": {
 										"type": "string",
@@ -1626,39 +1503,27 @@
 											"$ref": "#/$defs/dataTypes/Percentage"
 										},
 										"cbc:Amount": {
-											"type": "object",
-											"title": "Line level allowance or charge amount",
-											"description": "The amount of an allowance or a charge, without VAT. Must be rounded to maximum 2 decimals",
-											"properties": {
-												"cbc:Amount@currencyID": {
-													"type": "string",
-													"$ref": "#/$defs/codeLists/ISO4217",
-													"description": "Mandatory attribute. Use BT-5"
-												}
-											},
-											"required": [
-												"cbc:Amount@currencyID"
-											]
+											"$ref": "#/$defs/dataTypes/Amount"
+										},
+										"cbc:Amount@currencyID": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/ISO4217",
+											"description": "Mandatory attribute. Use BT-5"
 										},
 										"cbc:BaseAmount": {
-											"type": "object",
-											"title": "Line level allowance or charge base amount",
-											"description": "The base amount that may be used, in conjunction with the line level allowance or charge percentage, to\n                calculate the line level allowance or charge amount. Must be rounded to maximum 2 decimals",
-											"properties": {
-												"cbc:BaseAmount@currencyID": {
-													"type": "string",
-													"$ref": "#/$defs/codeLists/ISO4217",
-													"description": "Mandatory attribute. Use BT-5"
-												}
-											},
-											"required": [
-												"cbc:BaseAmount@currencyID"
-											]
+											"$ref": "#/$defs/dataTypes/Amount"
+										},
+										"cbc:BaseAmount@currencyID": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/ISO4217",
+											"description": "Mandatory attribute. Use BT-5"
 										}
 									},
 									"required": [
 										"cbc:ChargeIndicator",
-										"cbc:Amount"
+										"cbc:Amount",
+										"cbc:Amount@currencyID",
+										"cbc:BaseAmount@currencyID"
 									]
 								}
 							},
@@ -1710,24 +1575,20 @@
 										"title": "STANDARD ITEM IDENTIFICATION",
 										"properties": {
 											"cbc:ID": {
-												"type": "object",
+												"type": "string",
 												"title": "Item standard identifier",
-												"description": "An item identifier based on a registered scheme.",
-												"properties": {
-													"cbc:ID@schemeID": {
-														"type": "string",
-														"$ref": "#/$defs/codeLists/ICD",
-														"title": "Item standard identifier identification scheme identifier",
-														"description": "The identification scheme identifier of the Item standard identifier"
-													}
-												},
-												"required": [
-													"cbc:ID@schemeID"
-												]
+												"description": "An item identifier based on a registered scheme."
+											},
+											"cbc:ID@schemeID": {
+												"type": "string",
+												"$ref": "#/$defs/codeLists/ICD",
+												"title": "Item standard identifier identification scheme identifier",
+												"description": "The identification scheme identifier of the Item standard identifier"
 											}
 										},
 										"required": [
-											"cbc:ID"
+											"cbc:ID",
+											"cbc:ID@schemeID"
 										]
 									},
 									"cac:OriginCountry": {
@@ -1752,29 +1613,25 @@
 											"title": "COMMODITY CLASSIFICATION",
 											"properties": {
 												"cbc:ItemClassificationCode": {
-													"type": "object",
+													"type": "string",
 													"title": "Item classification identifier",
-													"description": "A code for classifying the item by its type or nature.",
-													"properties": {
-														"cbc:ItemClassificationCode@listID": {
-															"type": "string",
-															"$ref": "#/$defs/codeLists/UNCL7143",
-															"title": "Item classification identifier identification scheme identifier",
-															"description": "The identification scheme identifier of the Item classification identifier"
-														},
-														"cbc:ItemClassificationCode@listVersionID": {
-															"type": "string",
-															"title": "Item classification identifier version identification scheme identifier",
-															"description": "The identification scheme version identifier of the Item classification identifier"
-														}
-													},
-													"required": [
-														"cbc:ItemClassificationCode@listID"
-													]
+													"description": "A code for classifying the item by its type or nature."
+												},
+												"cbc:ItemClassificationCode@listID": {
+													"type": "string",
+													"$ref": "#/$defs/codeLists/UNCL7143",
+													"title": "Item classification identifier identification scheme identifier",
+													"description": "The identification scheme identifier of the Item classification identifier"
+												},
+												"cbc:ItemClassificationCode@listVersionID": {
+													"type": "string",
+													"title": "Item classification identifier version identification scheme identifier",
+													"description": "The identification scheme version identifier of the Item classification identifier"
 												}
 											},
 											"required": [
-												"cbc:ItemClassificationCode"
+												"cbc:ItemClassificationCode",
+												"cbc:ItemClassificationCode@listID"
 											]
 										}
 									},
@@ -1847,32 +1704,21 @@
 								"description": "A group of business terms providing information about the price applied for the goods and services\n            invoiced on the Invoice line.",
 								"properties": {
 									"cbc:PriceAmount": {
-										"type": "object",
-										"title": "Item net price",
-										"description": "The price of an item, exclusive of VAT, after subtracting item price discount. The Item net price has to be equal with the\n                Item gross price less the Item price discount, if they are both provided. Item price can not be negative.",
-										"properties": {
-											"cbc:PriceAmount@currencyID": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/ISO4217",
-												"description": "Mandatory attribute. Use BT-5"
-											}
-										},
-										"required": [
-											"cbc:PriceAmount@currencyID"
-										]
+										"$ref": "#/$defs/dataTypes/Amount"
+									},
+									"cbc:PriceAmount@currencyID": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/ISO4217",
+										"description": "Mandatory attribute. Use BT-5"
 									},
 									"cbc:BaseQuantity": {
-										"type": "object",
-										"title": "Item price base quantity",
-										"description": "The number of item units to which the price applies.",
-										"properties": {
-											"cbc:BaseQuantity@unitCode": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/UNECERec20",
-												"title": "Item price base quantity unit of measure code",
-												"description": "The unit of measure that applies to the Item price base quantity, must be the same as the unit code of the Invoiced/credited quantity. Codes for unit of packaging from UNECE Recommendation No. 21 can be used in accordance with the descriptions in the \"Intro\" section of UN/ECE Recommendation 20, Revision 11 (2015):\n                    The 2 character alphanumeric code values in UNECE Recommendation 21 shall be used. To avoid duplication with existing code values in UNECE Recommendation No. 20, each code value from UNECE Recommendation 21 shall be prefixed with an “X”, resulting in a 3 alphanumeric code when used as a unit of measure."
-											}
-										}
+										"$ref": "#/$defs/dataTypes/Quantity"
+									},
+									"cbc:BaseQuantity@unitCode": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/UNECERec20",
+										"title": "Item price base quantity unit of measure code",
+										"description": "The unit of measure that applies to the Item price base quantity, must be the same as the unit code of the Invoiced/credited quantity. Codes for unit of packaging from UNECE Recommendation No. 21 can be used in accordance with the descriptions in the \"Intro\" section of UN/ECE Recommendation 20, Revision 11 (2015):\n                    The 2 character alphanumeric code values in UNECE Recommendation 21 shall be used. To avoid duplication with existing code values in UNECE Recommendation No. 20, each code value from UNECE Recommendation 21 shall be prefixed with an “X”, resulting in a 3 alphanumeric code when used as a unit of measure."
 									},
 									"cac:AllowanceCharge": {
 										"type": "object",
@@ -1883,51 +1729,42 @@
 												"description": "Mandatory element. Value must be “false”"
 											},
 											"cbc:Amount": {
-												"type": "object",
-												"title": "Item price discount",
-												"description": "The total discount subtracted from the Item gross price to calculate the Item net price.",
-												"properties": {
-													"cbc:Amount@currencyID": {
-														"type": "string",
-														"$ref": "#/$defs/codeLists/ISO4217",
-														"description": "Mandatory attribute. Use BT-5"
-													}
-												},
-												"required": [
-													"cbc:Amount@currencyID"
-												]
+												"$ref": "#/$defs/dataTypes/Amount"
+											},
+											"cbc:Amount@currencyID": {
+												"type": "string",
+												"$ref": "#/$defs/codeLists/ISO4217",
+												"description": "Mandatory attribute. Use BT-5"
 											},
 											"cbc:BaseAmount": {
-												"type": "object",
-												"title": "Item gross price",
-												"description": "The unit price, exclusive of VAT, before subtracting Item price discount, can not be negative",
-												"properties": {
-													"cbc:BaseAmount@currencyID": {
-														"type": "string",
-														"$ref": "#/$defs/codeLists/ISO4217",
-														"description": "Mandatory attribute. Use BT-5"
-													}
-												},
-												"required": [
-													"cbc:BaseAmount@currencyID"
-												]
+												"$ref": "#/$defs/dataTypes/Amount"
+											},
+											"cbc:BaseAmount@currencyID": {
+												"type": "string",
+												"$ref": "#/$defs/codeLists/ISO4217",
+												"description": "Mandatory attribute. Use BT-5"
 											}
 										},
 										"required": [
 											"cbc:ChargeIndicator",
-											"cbc:Amount"
+											"cbc:Amount",
+											"cbc:Amount@currencyID",
+											"cbc:BaseAmount@currencyID"
 										]
 									}
 								},
 								"required": [
-									"cbc:PriceAmount"
+									"cbc:PriceAmount",
+									"cbc:PriceAmount@currencyID"
 								]
 							}
 						},
 						"required": [
 							"cbc:ID",
 							"cbc:InvoicedQuantity",
+							"cbc:InvoicedQuantity@unitCode",
 							"cbc:LineExtensionAmount",
+							"cbc:LineExtensionAmount@currencyID",
 							"cac:Item",
 							"cac:Price"
 						]

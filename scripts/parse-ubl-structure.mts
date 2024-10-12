@@ -81,6 +81,7 @@ for (const element of structure) {
 		element.Element = element.Document;
 		delete element.Document;
 		const tree = buildTree(element.Element);
+		sortAttributes(tree);
 		console.log(JSON.stringify(buildSchema(tree), null, '\t'));
 		process.exit(0);
 	}
@@ -88,7 +89,50 @@ for (const element of structure) {
 
 throw new Error(`error parsing '${rootFilename}'`);
 
-function buildTree(element: any): Element {
+/**
+ * We treat attributes for an element `cxy:SomeElement` like regular elements
+ * with a name `cxy:SomeElement@attributeName`.  However, because of the way
+ * they are retrieved, they don't appear directly after their corresponding
+ * attribute.  This is merely a cosmetic problem but we fix it by iterating
+ * the intermediate tree and resorting the attributes.
+ *
+ * @param element the nested data structure
+ */
+function sortAttributes(element: { [key: string]: any}) {
+	if (typeof element === 'object') {
+		for (const key in element) {
+			sortAttributes(element[key]);
+
+			if (key === 'children') {
+				const sorted = [];
+
+				const attributes = element.children
+					.filter((child: { Term: string | string[]; }) => child.Term.includes('@'))
+					.reduce((acc: { [x: string]: any; }, child: { Term: string | number; }) => {
+							acc[child.Term] = child;
+							return acc;
+					}, {} as { [key: string]: any });
+
+				for (const child of element.children) {
+					if (child.Term.includes('@')) {
+						continue;
+					}
+					sorted.push(child);
+					const prefix = child.Term + '@';
+					for (const attribute in attributes) {
+						if (attribute.startsWith(prefix)) {
+							sorted.push(attributes[attribute]);
+						}
+					}
+				}
+
+				element.children = sorted;
+			}
+		}
+	}
+}
+
+function buildTree(element: any, parent: any = null): Element {
 	const tree:Element = {} as Element;
 
 	for (const node of element) {
@@ -106,14 +150,13 @@ function buildTree(element: any): Element {
 			} else if ('Attribute' in node) {
 				const attribute = buildTree(node.Attribute);
 				attribute.Term = `${tree.Term}@${attribute.Term}`;
-				tree.children ??= [];
-				tree.children.push(attribute);
+				parent.children.push(attribute);
 				if (':@' in node && '@_usage' in node[':@'] && node[':@']['@_usage'] === 'Optional') {
 					attribute.cardinality = '0..1';
 				}
 			} else if ('Element' in node) {
 				tree.children ??= [];
-				const newElement = buildTree(node.Element);
+				const newElement = buildTree(node.Element, tree);
 				tree.children.push(newElement);
 				if (':@' in node && '@_cardinality' in node[':@']) {
 					newElement.cardinality = node[':@']['@_cardinality'];
@@ -121,6 +164,12 @@ function buildTree(element: any): Element {
 			}
 		}
 	}
+
+	/*
+	// Move attributes at the right place.
+	if (parent && parent.children) {
+	}
+	*/
 
 	return tree;
 }
