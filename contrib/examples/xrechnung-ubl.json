@@ -5,6 +5,24 @@
 		"cbc:IssueDate": "2024-10-12",
 		"cbc:InvoiceTypeCode": "380",
 		"cbc:DocumentCurrencyCode": "EUR",
-		"cbc:ID": "1234567890"
+		"cbc:ID": "1234567890",
+		"cac:AccountingSupplierParty": {
+			"cac:Party": {
+				"cbc:EndpointID": "DE16520503531004885412",
+				"cbc:EndpointID@schemeID": "9918",
+				"cac:PostalAddress": {},
+				"cac:PartyLegalEntity": {}
+			}
+		},
+		"cac:AccountingCustomerParty": {
+			"cac:Party": {
+				"cbc:EndpointID": "DE279247134",
+				"cbc:EndpointID@schemeID": "9930"
+			}
+		},
+		"cac:TaxTotal": {},
+		"cac:MonetaryTotal": {},
+		"cac:LegalMonetaryTotal": {},
+		"cac:InvoiceLine": {}
 	}
 }
