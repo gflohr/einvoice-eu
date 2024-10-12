@@ -186,79 +186,82 @@
 					]
 				},
 				"cac:AdditionalDocumentReference": {
-					"type": "object",
-					"title": "ADDITIONAL SUPPORTING DOCUMENTS",
-					"description": "A group of business terms providing information about additional supporting documents substantiating the claims made in the Invoice.\n            The additional supporting documents can be used for both referencing a document number which is expected to be known by the receiver, \n            an external document (referenced by a URL) or as an embedded document, Base64 encoded (such as a time report).",
-					"properties": {
-						"cbc:ID": {
-							"type": "object",
-							"title": "Invoiced object identifier, Supporting document reference",
-							"description": "An identifier for an object on which the invoice is based, given by the Seller, or the identifier for the supporting document.",
-							"properties": {
-								"cbc:ID@schemeID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/UNCL1153",
-									"title": "Scheme identifier",
-									"description": "The identification scheme identifier of the Invoiced object identifier."
+					"type": "array",
+					"items": {
+						"type": "object",
+						"title": "ADDITIONAL SUPPORTING DOCUMENTS",
+						"description": "A group of business terms providing information about additional supporting documents substantiating the claims made in the Invoice.\n            The additional supporting documents can be used for both referencing a document number which is expected to be known by the receiver, \n            an external document (referenced by a URL) or as an embedded document, Base64 encoded (such as a time report).",
+						"properties": {
+							"cbc:ID": {
+								"type": "object",
+								"title": "Invoiced object identifier, Supporting document reference",
+								"description": "An identifier for an object on which the invoice is based, given by the Seller, or the identifier for the supporting document.",
+								"properties": {
+									"cbc:ID@schemeID": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/UNCL1153",
+										"title": "Scheme identifier",
+										"description": "The identification scheme identifier of the Invoiced object identifier."
+									}
 								}
-							}
-						},
-						"cbc:DocumentTypeCode": {
-							"type": "string",
-							"title": "Document type code",
-							"description": "Code \"130\" MUST be used to indicate an invoice object reference. Not used for other additional documents"
-						},
-						"cbc:DocumentDescription": {
-							"type": "string",
-							"title": "Supporting document description",
-							"description": "A description of the supporting document, such as: timesheet, usage report etc."
-						},
-						"cac:Attachment": {
-							"type": "object",
-							"title": "ATTACHMENT",
-							"properties": {
-								"cbc:EmbeddedDocumentBinaryObject": {
-									"type": "object",
-									"title": "Attached document",
-									"description": "An attached document embedded as binary object (Base64) or sent together with the invoice.",
-									"properties": {
-										"cbc:EmbeddedDocumentBinaryObject@mimeCode": {
-											"type": "string",
-											"$ref": "#/$defs/codeLists/MimeCode",
-											"title": "Attached document Mime code",
-											"description": "The mime code of the attached document."
+							},
+							"cbc:DocumentTypeCode": {
+								"type": "string",
+								"title": "Document type code",
+								"description": "Code \"130\" MUST be used to indicate an invoice object reference. Not used for other additional documents"
+							},
+							"cbc:DocumentDescription": {
+								"type": "string",
+								"title": "Supporting document description",
+								"description": "A description of the supporting document, such as: timesheet, usage report etc."
+							},
+							"cac:Attachment": {
+								"type": "object",
+								"title": "ATTACHMENT",
+								"properties": {
+									"cbc:EmbeddedDocumentBinaryObject": {
+										"type": "object",
+										"title": "Attached document",
+										"description": "An attached document embedded as binary object (Base64) or sent together with the invoice.",
+										"properties": {
+											"cbc:EmbeddedDocumentBinaryObject@mimeCode": {
+												"type": "string",
+												"$ref": "#/$defs/codeLists/MimeCode",
+												"title": "Attached document Mime code",
+												"description": "The mime code of the attached document."
+											},
+											"cbc:EmbeddedDocumentBinaryObject@filename": {
+												"type": "string",
+												"title": "Attached document Filename",
+												"description": "The file name of the attached document"
+											}
 										},
-										"cbc:EmbeddedDocumentBinaryObject@filename": {
-											"type": "string",
-											"title": "Attached document Filename",
-											"description": "The file name of the attached document"
-										}
+										"required": [
+											"cbc:EmbeddedDocumentBinaryObject@mimeCode",
+											"cbc:EmbeddedDocumentBinaryObject@filename"
+										]
 									},
-									"required": [
-										"cbc:EmbeddedDocumentBinaryObject@mimeCode",
-										"cbc:EmbeddedDocumentBinaryObject@filename"
-									]
-								},
-								"cac:ExternalReference": {
-									"type": "object",
-									"title": "EXTERNAL REFERENCE",
-									"properties": {
-										"cbc:URI": {
-											"type": "string",
-											"title": "External document location",
-											"description": "The URL (Uniform Resource Locator) that identifies where the external document is located.  \n                        A means of locating the resource, including its primary access mechanism, e.g. http:// or ftp://."
-										}
-									},
-									"required": [
-										"cbc:URI"
-									]
+									"cac:ExternalReference": {
+										"type": "object",
+										"title": "EXTERNAL REFERENCE",
+										"properties": {
+											"cbc:URI": {
+												"type": "string",
+												"title": "External document location",
+												"description": "The URL (Uniform Resource Locator) that identifies where the external document is located.  \n                        A means of locating the resource, including its primary access mechanism, e.g. http:// or ftp://."
+											}
+										},
+										"required": [
+											"cbc:URI"
+										]
+									}
 								}
 							}
-						}
-					},
-					"required": [
-						"cbc:ID"
-					]
+						},
+						"required": [
+							"cbc:ID"
+						]
+					}
 				},
 				"cac:ProjectReference": {
 					"type": "object",
@@ -1126,10 +1129,7 @@
 							}
 						},
 						"required": [
-							"cbc:PaymentMeansCode",
-							"cac:CardAccount",
-							"cac:PayeeFinancialAccount",
-							"cac:PaymentMandate"
+							"cbc:PaymentMeansCode"
 						]
 					}
 				},
@@ -1148,208 +1148,216 @@
 					]
 				},
 				"cac:AllowanceCharge": {
-					"type": "object",
-					"title": "DOCUMENT LEVEL ALLOWANCES AND CHARGES",
-					"description": "A group of business terms providing information about allowances applicable to the Invoice as a\n            whole. A group of business terms providing information about charges and taxes other than VAT, applicable\n            to the Invoice as a whole.",
-					"properties": {
-						"cbc:ChargeIndicator": {
-							"type": "string",
-							"description": "Use “true” when informing about Charges and “false” when informing about\n                Allowances."
-						},
-						"cbc:AllowanceChargeReasonCode": {
-							"type": "string",
-							"$ref": "#/$defs/codeLists/UNCL7161",
-							"title": "Document level allowance or charge reason code",
-							"description": "The reason for the document level allowance or charge, expressed as a code. For allowances a subset of codelist UNCL5189 is to be used, and for charges codelist UNCL7161 applies.\n                The Document level allowance reason code and the Document level allowance reason shall indicate the same allowance reason"
-						},
-						"cbc:AllowanceChargeReason": {
-							"type": "string",
-							"title": "Document level allowance or charge reason",
-							"description": "The reason for the document level allowance or charge, expressed as text.\n                The Document level allowance reason code and the Document level allowance reason shall indicate the same allowance reason"
-						},
-						"cbc:MultiplierFactorNumeric": {
-							"$ref": "#/$defs/dataTypes/Percentage"
-						},
-						"cbc:Amount": {
-							"type": "object",
-							"title": "Document level allowance or charge amount",
-							"description": "The amount of an allowance or a charge, without VAT. Must be rounded to maximum 2 decimals",
-							"properties": {
-								"cbc:Amount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
+					"type": "array",
+					"items": {
+						"type": "object",
+						"title": "DOCUMENT LEVEL ALLOWANCES AND CHARGES",
+						"description": "A group of business terms providing information about allowances applicable to the Invoice as a\n            whole. A group of business terms providing information about charges and taxes other than VAT, applicable\n            to the Invoice as a whole.",
+						"properties": {
+							"cbc:ChargeIndicator": {
+								"type": "string",
+								"description": "Use “true” when informing about Charges and “false” when informing about\n                Allowances."
 							},
-							"required": [
-								"cbc:Amount@currencyID"
-							]
-						},
-						"cbc:BaseAmount": {
-							"type": "object",
-							"title": "Document level allowance or charge base amount",
-							"description": "The base amount that may be used, in conjunction with the document level allowance or charge percentage, to\n                calculate the document level allowance or charge amount. Must be rounded to maximum 2 decimals",
-							"properties": {
-								"cbc:BaseAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5"
-								}
+							"cbc:AllowanceChargeReasonCode": {
+								"type": "string",
+								"$ref": "#/$defs/codeLists/UNCL7161",
+								"title": "Document level allowance or charge reason code",
+								"description": "The reason for the document level allowance or charge, expressed as a code. For allowances a subset of codelist UNCL5189 is to be used, and for charges codelist UNCL7161 applies.\n                The Document level allowance reason code and the Document level allowance reason shall indicate the same allowance reason"
 							},
-							"required": [
-								"cbc:BaseAmount@currencyID"
-							]
-						},
-						"cac:TaxCategory": {
-							"type": "object",
-							"title": "TAX CATEGORY",
-							"properties": {
-								"cbc:ID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/UNCL5305",
-									"title": "Document level allowance or charge VAT category code",
-									"description": "A coded identification of what VAT category applies to the document level allowance or charge."
-								},
-								"cbc:Percent": {
-									"$ref": "#/$defs/dataTypes/Percentage"
-								},
-								"cac:TaxScheme": {
-									"type": "object",
-									"title": "TAX SCHEME",
-									"properties": {
-										"cbc:ID": {
-											"type": "string",
-											"description": "Mandatory element. Use “VAT”"
-										}
-									},
-									"required": [
-										"cbc:ID"
-									]
-								}
+							"cbc:AllowanceChargeReason": {
+								"type": "string",
+								"title": "Document level allowance or charge reason",
+								"description": "The reason for the document level allowance or charge, expressed as text.\n                The Document level allowance reason code and the Document level allowance reason shall indicate the same allowance reason"
 							},
-							"required": [
-								"cbc:ID",
-								"cac:TaxScheme"
-							]
-						}
-					},
-					"required": [
-						"cbc:ChargeIndicator",
-						"cbc:Amount",
-						"cac:TaxCategory"
-					]
-				},
-				"cac:TaxTotal": {
-					"type": "object",
-					"title": "TAX TOTAL",
-					"description": "When tax currency code is provided, two instances of the tax total must be present, but only one with tax subtotal.",
-					"properties": {
-						"cbc:TaxAmount": {
-							"type": "object",
-							"title": "Invoice total VAT amount, Invoice total VAT amount in accounting currency",
-							"description": "The total VAT amount for the Invoice or the VAT total amount expressed in the accounting currency accepted or required in the country of\n                the Seller. Must be rounded to maximum 2 decimals",
-							"properties": {
-								"cbc:TaxAmount@currencyID": {
-									"type": "string",
-									"$ref": "#/$defs/codeLists/ISO4217",
-									"description": "Mandatory attribute. Use BT-5 or BT-6."
-								}
+							"cbc:MultiplierFactorNumeric": {
+								"$ref": "#/$defs/dataTypes/Percentage"
 							},
-							"required": [
-								"cbc:TaxAmount@currencyID"
-							]
-						},
-						"cac:TaxSubtotal": {
-							"type": "array",
-							"items": {
+							"cbc:Amount": {
 								"type": "object",
-								"title": "VAT BREAKDOWN",
-								"description": "A group of business terms providing information about VAT breakdown by different categories, rates\n                and exemption reasons",
+								"title": "Document level allowance or charge amount",
+								"description": "The amount of an allowance or a charge, without VAT. Must be rounded to maximum 2 decimals",
 								"properties": {
-									"cbc:TaxableAmount": {
-										"type": "object",
-										"title": "VAT category taxable amount",
-										"description": "Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the\n                    VAT category rate is applicable). Must be rounded to maximum 2 decimals.",
-										"properties": {
-											"cbc:TaxableAmount@currencyID": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/ISO4217",
-												"description": "Mandatory attribute. Use BT-5"
-											}
-										},
-										"required": [
-											"cbc:TaxableAmount@currencyID"
-										]
+									"cbc:Amount@currencyID": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/ISO4217",
+										"description": "Mandatory attribute. Use BT-5"
+									}
+								},
+								"required": [
+									"cbc:Amount@currencyID"
+								]
+							},
+							"cbc:BaseAmount": {
+								"type": "object",
+								"title": "Document level allowance or charge base amount",
+								"description": "The base amount that may be used, in conjunction with the document level allowance or charge percentage, to\n                calculate the document level allowance or charge amount. Must be rounded to maximum 2 decimals",
+								"properties": {
+									"cbc:BaseAmount@currencyID": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/ISO4217",
+										"description": "Mandatory attribute. Use BT-5"
+									}
+								},
+								"required": [
+									"cbc:BaseAmount@currencyID"
+								]
+							},
+							"cac:TaxCategory": {
+								"type": "object",
+								"title": "TAX CATEGORY",
+								"properties": {
+									"cbc:ID": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/UNCL5305",
+										"title": "Document level allowance or charge VAT category code",
+										"description": "A coded identification of what VAT category applies to the document level allowance or charge."
 									},
-									"cbc:TaxAmount": {
-										"type": "object",
-										"title": "VAT category tax amount",
-										"description": "The total VAT amount for a given VAT category. Must be rounded to maximum 2 decimals.",
-										"properties": {
-											"cbc:TaxAmount@currencyID": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/ISO4217",
-												"description": "Mandatory attribute. Use BT-5"
-											}
-										},
-										"required": [
-											"cbc:TaxAmount@currencyID"
-										]
+									"cbc:Percent": {
+										"$ref": "#/$defs/dataTypes/Percentage"
 									},
-									"cac:TaxCategory": {
+									"cac:TaxScheme": {
 										"type": "object",
-										"title": "VAT CATEGORY",
+										"title": "TAX SCHEME",
 										"properties": {
 											"cbc:ID": {
 												"type": "string",
-												"$ref": "#/$defs/codeLists/UNCL5305",
-												"title": "VAT category code",
-												"description": "Coded identification of a VAT category."
-											},
-											"cbc:Percent": {
-												"$ref": "#/$defs/dataTypes/Percentage"
-											},
-											"cbc:TaxExemptionReasonCode": {
-												"type": "string",
-												"title": "VAT exemption reason code",
-												"description": "A coded statement of the reason for why the amount is exempted from VAT."
-											},
-											"cbc:TaxExemptionReason": {
-												"type": "string",
-												"title": "VAT exemption reason text",
-												"description": "A textual statement of the reason why the amount is exempted from VAT or why no VAT is being\n                        charged."
-											},
-											"cac:TaxScheme": {
-												"type": "object",
-												"title": "TAX SCHEME",
-												"properties": {
-													"cbc:ID": {
-														"type": "string",
-														"description": "Mandatory element. Use “VAT”"
-													}
-												},
-												"required": [
-													"cbc:ID"
-												]
+												"description": "Mandatory element. Use “VAT”"
 											}
 										},
 										"required": [
-											"cbc:ID",
-											"cac:TaxScheme"
+											"cbc:ID"
 										]
 									}
 								},
 								"required": [
-									"cbc:TaxableAmount",
-									"cbc:TaxAmount",
-									"cac:TaxCategory"
+									"cbc:ID",
+									"cac:TaxScheme"
 								]
 							}
-						}
+						},
+						"required": [
+							"cbc:ChargeIndicator",
+							"cbc:Amount",
+							"cac:TaxCategory"
+						]
+					}
+				},
+				"cac:TaxTotal": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"title": "TAX TOTAL",
+						"description": "When tax currency code is provided, two instances of the tax total must be present, but only one with tax subtotal.",
+						"properties": {
+							"cbc:TaxAmount": {
+								"type": "object",
+								"title": "Invoice total VAT amount, Invoice total VAT amount in accounting currency",
+								"description": "The total VAT amount for the Invoice or the VAT total amount expressed in the accounting currency accepted or required in the country of\n                the Seller. Must be rounded to maximum 2 decimals",
+								"properties": {
+									"cbc:TaxAmount@currencyID": {
+										"type": "string",
+										"$ref": "#/$defs/codeLists/ISO4217",
+										"description": "Mandatory attribute. Use BT-5 or BT-6."
+									}
+								},
+								"required": [
+									"cbc:TaxAmount@currencyID"
+								]
+							},
+							"cac:TaxSubtotal": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"title": "VAT BREAKDOWN",
+									"description": "A group of business terms providing information about VAT breakdown by different categories, rates\n                and exemption reasons",
+									"properties": {
+										"cbc:TaxableAmount": {
+											"type": "object",
+											"title": "VAT category taxable amount",
+											"description": "Sum of all taxable amounts subject to a specific VAT category code and VAT category rate (if the\n                    VAT category rate is applicable). Must be rounded to maximum 2 decimals.",
+											"properties": {
+												"cbc:TaxableAmount@currencyID": {
+													"type": "string",
+													"$ref": "#/$defs/codeLists/ISO4217",
+													"description": "Mandatory attribute. Use BT-5"
+												}
+											},
+											"required": [
+												"cbc:TaxableAmount@currencyID"
+											]
+										},
+										"cbc:TaxAmount": {
+											"type": "object",
+											"title": "VAT category tax amount",
+											"description": "The total VAT amount for a given VAT category. Must be rounded to maximum 2 decimals.",
+											"properties": {
+												"cbc:TaxAmount@currencyID": {
+													"type": "string",
+													"$ref": "#/$defs/codeLists/ISO4217",
+													"description": "Mandatory attribute. Use BT-5"
+												}
+											},
+											"required": [
+												"cbc:TaxAmount@currencyID"
+											]
+										},
+										"cac:TaxCategory": {
+											"type": "object",
+											"title": "VAT CATEGORY",
+											"properties": {
+												"cbc:ID": {
+													"type": "string",
+													"$ref": "#/$defs/codeLists/UNCL5305",
+													"title": "VAT category code",
+													"description": "Coded identification of a VAT category."
+												},
+												"cbc:Percent": {
+													"$ref": "#/$defs/dataTypes/Percentage"
+												},
+												"cbc:TaxExemptionReasonCode": {
+													"type": "string",
+													"title": "VAT exemption reason code",
+													"description": "A coded statement of the reason for why the amount is exempted from VAT."
+												},
+												"cbc:TaxExemptionReason": {
+													"type": "string",
+													"title": "VAT exemption reason text",
+													"description": "A textual statement of the reason why the amount is exempted from VAT or why no VAT is being\n                        charged."
+												},
+												"cac:TaxScheme": {
+													"type": "object",
+													"title": "TAX SCHEME",
+													"properties": {
+														"cbc:ID": {
+															"type": "string",
+															"description": "Mandatory element. Use “VAT”"
+														}
+													},
+													"required": [
+														"cbc:ID"
+													]
+												}
+											},
+											"required": [
+												"cbc:ID",
+												"cac:TaxScheme"
+											]
+										}
+									},
+									"required": [
+										"cbc:TaxableAmount",
+										"cbc:TaxAmount",
+										"cac:TaxCategory"
+									]
+								}
+							}
+						},
+						"required": [
+							"cbc:TaxAmount"
+						]
 					},
-					"required": [
-						"cbc:TaxAmount"
-					]
+					"minItems": 1,
+					"maxItems": 2
 				},
 				"cac:LegalMonetaryTotal": {
 					"type": "object",
@@ -1593,63 +1601,66 @@
 								]
 							},
 							"cac:AllowanceCharge": {
-								"type": "object",
-								"title": "INVOICE LINE ALLOWANCES OR CHARGES",
-								"description": "A group of business terms providing information about allowances or charges applicable to the individual\n            Invoice line.",
-								"properties": {
-									"cbc:ChargeIndicator": {
-										"type": "string",
-										"description": "Use “true” when informing about Charges and “false” when informing about\n                Allowances"
-									},
-									"cbc:AllowanceChargeReasonCode": {
-										"type": "string",
-										"$ref": "#/$defs/codeLists/UNCL7161",
-										"title": "Line level allowance or charge reason code",
-										"description": "The reason for the line level allowance or charge, expressed as a code."
-									},
-									"cbc:AllowanceChargeReason": {
-										"type": "string",
-										"title": "Line level allowance or charge reason",
-										"description": "The reason for the line level allowance or charge, expressed as text."
-									},
-									"cbc:MultiplierFactorNumeric": {
-										"$ref": "#/$defs/dataTypes/Percentage"
-									},
-									"cbc:Amount": {
-										"type": "object",
-										"title": "Line level allowance or charge amount",
-										"description": "The amount of an allowance or a charge, without VAT. Must be rounded to maximum 2 decimals",
-										"properties": {
-											"cbc:Amount@currencyID": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/ISO4217",
-												"description": "Mandatory attribute. Use BT-5"
-											}
+								"type": "array",
+								"items": {
+									"type": "object",
+									"title": "INVOICE LINE ALLOWANCES OR CHARGES",
+									"description": "A group of business terms providing information about allowances or charges applicable to the individual\n            Invoice line.",
+									"properties": {
+										"cbc:ChargeIndicator": {
+											"type": "string",
+											"description": "Use “true” when informing about Charges and “false” when informing about\n                Allowances"
 										},
-										"required": [
-											"cbc:Amount@currencyID"
-										]
-									},
-									"cbc:BaseAmount": {
-										"type": "object",
-										"title": "Line level allowance or charge base amount",
-										"description": "The base amount that may be used, in conjunction with the line level allowance or charge percentage, to\n                calculate the line level allowance or charge amount. Must be rounded to maximum 2 decimals",
-										"properties": {
-											"cbc:BaseAmount@currencyID": {
-												"type": "string",
-												"$ref": "#/$defs/codeLists/ISO4217",
-												"description": "Mandatory attribute. Use BT-5"
-											}
+										"cbc:AllowanceChargeReasonCode": {
+											"type": "string",
+											"$ref": "#/$defs/codeLists/UNCL7161",
+											"title": "Line level allowance or charge reason code",
+											"description": "The reason for the line level allowance or charge, expressed as a code."
 										},
-										"required": [
-											"cbc:BaseAmount@currencyID"
-										]
-									}
-								},
-								"required": [
-									"cbc:ChargeIndicator",
-									"cbc:Amount"
-								]
+										"cbc:AllowanceChargeReason": {
+											"type": "string",
+											"title": "Line level allowance or charge reason",
+											"description": "The reason for the line level allowance or charge, expressed as text."
+										},
+										"cbc:MultiplierFactorNumeric": {
+											"$ref": "#/$defs/dataTypes/Percentage"
+										},
+										"cbc:Amount": {
+											"type": "object",
+											"title": "Line level allowance or charge amount",
+											"description": "The amount of an allowance or a charge, without VAT. Must be rounded to maximum 2 decimals",
+											"properties": {
+												"cbc:Amount@currencyID": {
+													"type": "string",
+													"$ref": "#/$defs/codeLists/ISO4217",
+													"description": "Mandatory attribute. Use BT-5"
+												}
+											},
+											"required": [
+												"cbc:Amount@currencyID"
+											]
+										},
+										"cbc:BaseAmount": {
+											"type": "object",
+											"title": "Line level allowance or charge base amount",
+											"description": "The base amount that may be used, in conjunction with the line level allowance or charge percentage, to\n                calculate the line level allowance or charge amount. Must be rounded to maximum 2 decimals",
+											"properties": {
+												"cbc:BaseAmount@currencyID": {
+													"type": "string",
+													"$ref": "#/$defs/codeLists/ISO4217",
+													"description": "Mandatory attribute. Use BT-5"
+												}
+											},
+											"required": [
+												"cbc:BaseAmount@currencyID"
+											]
+										}
+									},
+									"required": [
+										"cbc:ChargeIndicator",
+										"cbc:Amount"
+									]
+								}
 							},
 							"cac:Item": {
 								"type": "object",
@@ -1917,8 +1928,6 @@
 							"cbc:ID",
 							"cbc:InvoicedQuantity",
 							"cbc:LineExtensionAmount",
-							"cac:InvoicePeriod",
-							"cac:AllowanceCharge",
 							"cac:Item",
 							"cac:Price"
 						]
@@ -1933,13 +1942,8 @@
 				"cbc:IssueDate",
 				"cbc:InvoiceTypeCode",
 				"cbc:DocumentCurrencyCode",
-				"cac:AdditionalDocumentReference",
 				"cac:AccountingSupplierParty",
 				"cac:AccountingCustomerParty",
-				"cac:PayeeParty",
-				"cac:TaxRepresentativeParty",
-				"cac:Delivery",
-				"cac:AllowanceCharge",
 				"cac:TaxTotal",
 				"cac:LegalMonetaryTotal",
 				"cac:InvoiceLine"

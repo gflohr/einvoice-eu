@@ -219,7 +219,12 @@ function resolveStructure(parser: XMLParser, data: any): any {
 			const child = data[key];
 			if (Array.isArray(data) && typeof child === 'object' && 'Include' in child) {
 				const filename = child.Include[0]['#text'];
-				child.Element = readXml(parser, `${basedir}/${filename}`)[0].Element;
+				const document = readXml(parser, `${basedir}/${filename}`);
+				const data = resolveStructure(parser, document);
+				child.Element = data[0].Element;
+				if (data[0][':@']) {
+					child[':@'] = data[0][':@'];
+				}
 				delete child.Include;
 			}
 

@@ -4,7 +4,7 @@
 		"cbc:ProfileID": "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0",
 		"cbc:IssueDate": "2024-10-12",
 		"cbc:InvoiceTypeCode": "380",
-		"cbc:DocumentCurrencyCode": "EURos",
+		"cbc:DocumentCurrencyCode": "EUR",
 		"cbc:ID": "1234567890"
 	}
 }
