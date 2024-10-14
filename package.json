@@ -9,7 +9,7 @@
 	],
 	"scripts": {
 		"build": "nest build",
-		"format": "prettier --write *.json *.md scripts/* \"src/**/*.ts\" \"test/**/*.ts\"",
+		"format": "prettier --write *.json *.md scripts/* \"contrib/**/*.json\" \"src/**/*.{ts,json}\" \"test/**/*.ts\"",
 		"start": "nest start",
 		"start:dev": "nest start --watch",
 		"start:debug": "nest start --debug --watch",
