@@ -43,13 +43,14 @@ const $defs = {
 	dataTypes: {
 		Amount: {
 			type: 'string',
-			pattern: '^(0|[1-9][0-9]*)(\.[0-9]{1,2})?$',
+			pattern: '^(0|[1-9][0-9]*)(.[0-9]{1,2})?$',
 		},
 		'Binary object': {
 			type: 'string',
 			// This is maybe too restrictive because it does not allow whitespace
 			// but this should be okay for our purposes.
-			pattern: '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)$',
+			pattern:
+				'^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)$',
 		},
 		Date: {
 			type: 'string',
@@ -59,13 +60,13 @@ const $defs = {
 			type: 'string',
 			// FIXME! The ZUGFeRD documentation states that a percentage must have
 			// a maximum of 4 decimal digts. Is that correct?
-			pattern: '^(0|[1-9][0-9]*)(\.[0-9]{1,4})?$'
+			pattern: '^(0|[1-9][0-9]*)(.[0-9]{1,4})?$',
 		},
 		Quantity: {
 			type: 'string',
-			pattern: '^(0|[1-9][0-9]*)(\.[0-9]+)?$',
+			pattern: '^(0|[1-9][0-9]*)(.[0-9]+)?$',
 		},
-	}
+	},
 };
 
 const codeListDir = 'peppol-bis-invoice-3/structure/codelist';
@@ -98,7 +99,7 @@ throw new Error(`error parsing '${rootFilename}'`);
  *
  * @param element the nested data structure
  */
-function sortAttributes(element: { [key: string]: any}) {
+function sortAttributes(element: { [key: string]: any }) {
 	if (typeof element === 'object') {
 		for (const key in element) {
 			sortAttributes(element[key]);
@@ -107,11 +108,16 @@ function sortAttributes(element: { [key: string]: any}) {
 				const sorted = [];
 
 				const attributes = element.children
-					.filter((child: { Term: string | string[]; }) => child.Term.includes('@'))
-					.reduce((acc: { [x: string]: any; }, child: { Term: string | number; }) => {
+					.filter((child: { Term: string | string[] }) =>
+						child.Term.includes('@'),
+					)
+					.reduce(
+						(acc: { [x: string]: any }, child: { Term: string | number }) => {
 							acc[child.Term] = child;
 							return acc;
-					}, {} as { [key: string]: any });
+						},
+						{} as { [key: string]: any },
+					);
 
 				for (const child of element.children) {
 					if (child.Term.includes('@')) {
@@ -146,17 +152,20 @@ function sortAttributes(element: { [key: string]: any}) {
  *
  * @param schema the schema to fix
  */
-function fixupAttributes(node: { [key: string]: any}) {
+function fixupAttributes(node: { [key: string]: any }) {
 	if (typeof node === 'object') {
 		for (const key in node) {
 			if (key === 'type' && node.type === 'object') {
-				const attributes = Object.keys(node.properties)
-					.filter(prop => prop.includes('@'));
+				const attributes = Object.keys(node.properties).filter(prop =>
+					prop.includes('@'),
+				);
 				const required: Array<string> = 'required' in node ? node.required : [];
 
 				if (attributes.length) {
 					node.dependentRequired = {};
-					const mandatoryAttributes = required.filter(prop => prop.includes('@'));
+					const mandatoryAttributes = required.filter(prop =>
+						prop.includes('@'),
+					);
 
 					for (const attribute of mandatoryAttributes) {
 						const elem = attribute.split('@')[0];
@@ -181,7 +190,7 @@ function fixupAttributes(node: { [key: string]: any}) {
 }
 
 function buildTree(element: any, parent: any = null): Element {
-	const tree:Element = {} as Element;
+	const tree: Element = {} as Element;
 
 	for (const node of element) {
 		if (typeof node === 'object') {
@@ -193,13 +202,21 @@ function buildTree(element: any, parent: any = null): Element {
 				tree.Description = node.Description[0]['#text'];
 			} else if ('DataType' in node) {
 				tree.DataType = node.DataType[0]['#text'];
-			} else if ('Reference' in node && ':@' in node && 'CODE_LIST' == node[':@']['@_type']) {
+			} else if (
+				'Reference' in node &&
+				':@' in node &&
+				'CODE_LIST' == node[':@']['@_type']
+			) {
 				tree.CodeList = node.Reference[0]['#text'];
 			} else if ('Attribute' in node) {
 				const attribute = buildTree(node.Attribute);
 				attribute.Term = `${tree.Term}@${attribute.Term}`;
 				parent.children.push(attribute);
-				if (':@' in node && '@_usage' in node[':@'] && node[':@']['@_usage'] === 'Optional') {
+				if (
+					':@' in node &&
+					'@_usage' in node[':@'] &&
+					node[':@']['@_usage'] === 'Optional'
+				) {
 					attribute.cardinality = '0..1';
 				}
 			} else if ('Element' in node) {
@@ -228,7 +245,7 @@ function buildSchema(tree: Element): JSONSchemaType<object> {
 		$defs,
 	};
 
-	(result.properties as { [key: string]: any})[tree.Term] = processNode(tree);
+	(result.properties as { [key: string]: any })[tree.Term] = processNode(tree);
 
 	if (parseCardinality(tree.cardinality).min === 1) {
 		(result.required as unknown as string[]).push(tree.Term);
@@ -252,9 +269,15 @@ function processNode(node: Element): JSONSchemaType<object> {
 	let schema: JSONSchemaType<any>;
 
 	if (node.CodeList) {
-		schema = { type: 'string', $ref: `#/$defs/codeLists/${node.CodeList}`, ...common };
+		schema = {
+			type: 'string',
+			$ref: `#/$defs/codeLists/${node.CodeList}`,
+			...common,
+		};
 	} else if (node.DataType && node.DataType in $defs.dataTypes) {
-		schema = { '$ref': `#/$defs/dataTypes/${node.DataType}`} as JSONSchemaType<any>;
+		schema = {
+			$ref: `#/$defs/dataTypes/${node.DataType}`,
+		} as JSONSchemaType<any>;
 	} else {
 		schema = { type: 'string', ...common };
 	}
@@ -315,7 +338,11 @@ function resolveStructure(parser: XMLParser, data: any): any {
 	if (typeof data === 'object') {
 		for (const key in data) {
 			const child = data[key];
-			if (Array.isArray(data) && typeof child === 'object' && 'Include' in child) {
+			if (
+				Array.isArray(data) &&
+				typeof child === 'object' &&
+				'Include' in child
+			) {
 				const filename = child.Include[0]['#text'];
 				const document = readXml(parser, `${basedir}/${filename}`);
 				const data = resolveStructure(parser, document);
@@ -344,8 +371,9 @@ function parseCardinality(cardinality: string | undefined): Cardinality {
 }
 
 function loadCodeLists(dir: string) {
-	const pattern = new RegExp('.+\.xml$');
-	const filenames = fs.readdirSync(dir)
+	const pattern = new RegExp('.+.xml$');
+	const filenames = fs
+		.readdirSync(dir)
 		.filter(filename => pattern.test(filename))
 		.map(filename => path.join(dir, filename));
 	const codeListParser = new XMLParser();
