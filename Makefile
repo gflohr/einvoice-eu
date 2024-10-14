@@ -11,7 +11,7 @@ all: \
 
 src/schema/ubl-invoice.schema.json: scripts/parse-ubl-structure.mts $(INVOICE_SCHEMA_DEPENDENCIES)
 	$(NPX) tsx $< >$@ || rm -f $@
-	$(NPX) ajv compile -s $@ || rm -f $@
+	$(NPX) ajv compile --spec=draft2019 -s $@ || rm -f $@
 
 
 .PHONY: clean

@@ -82,7 +82,9 @@ for (const element of structure) {
 		delete element.Document;
 		const tree = buildTree(element.Element);
 		sortAttributes(tree);
-		console.log(JSON.stringify(buildSchema(tree), null, '\t'));
+		const schema = buildSchema(tree);
+		fixupAttributes(schema);
+		console.log(JSON.stringify(schema, null, '\t'));
 		process.exit(0);
 	}
 }
@@ -132,6 +134,54 @@ function sortAttributes(element: { [key: string]: any}) {
 	}
 }
 
+/**
+ * Element attributes are either mandatory or optional.  But even a mandatory
+ * attribute must be absent if the corresponding element is absent (because it
+ * is optional itself).  Then the normal required logic for objects no longer
+ * works.
+ *
+ * This function iterates over all optional object properties and formulates
+ * corresponsing dependent schemas.
+ *
+ * Kudos for the implementation go to Jeremy Fiel for this answer on
+ * stackoverflow: https://stackoverflow.com/a/79086490/5464233
+ *
+ * @param schema the schema to fix
+ */
+function fixupAttributes(node: { [key: string]: any}) {
+	if (typeof node === 'object') {
+		for (const key in node) {
+			if ('type' in node && node.type === 'object') {
+				const attributes = Object.keys(node.properties)
+					.filter(prop => prop.includes('@'));
+				const required: Array<string> = 'required' in node ? node.required : [];
+
+				if (attributes.length) {
+					if ('required' in node) {
+						node.required = required.filter(prop => !prop.includes('@'));
+					}
+
+					node.dependentRequired = {};
+					const mandatoryAttributes = required.filter(prop => prop.includes('@'));
+
+					for (const attribute of mandatoryAttributes) {
+						const elem = attribute.split('@')[0];
+						node.dependentRequired[elem] ??= [];
+						node.dependentRequired[elem].push(attribute);
+					}
+
+					for (const attribute of attributes) {
+						const elem = attribute.split('@')[0];
+						node.dependentRequired[attribute] = [elem];
+					}
+				}
+			}
+
+			fixupAttributes(node[key]);
+		}
+	}
+}
+
 function buildTree(element: any, parent: any = null): Element {
 	const tree:Element = {} as Element;
 
@@ -165,17 +215,15 @@ function buildTree(element: any, parent: any = null): Element {
 		}
 	}
 
-	/*
-	// Move attributes at the right place.
-	if (parent && parent.children) {
-	}
-	*/
-
 	return tree;
 }
 
 function buildSchema(tree: Element): JSONSchemaType<object> {
+	const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+
 	const result = {
+		$schema: 'https://json-schema.org/draft/2019-09/schema',
+		$id: `https://www.cantanea.com/schemas/ubl-invoice-schema-v${pkg.version}`,
 		type: 'object',
 		properties: {},
 		required: [],
