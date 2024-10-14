@@ -48,6 +48,36 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Frequently Asked Questions
+
+### Why are no Numbers Used in the JSON Schema?
+
+Amounts have to be numbers >= 0 with at most two decimal places. The following
+JSON schema should work for this:
+
+```json
+{
+	"type": "number",
+	"multipleOf": 0.01
+}
+```
+
+This is even documented in the [JSON Schema
+documentation](https://json-schema.org/understanding-json-schema/reference/numeric#multiples).
+Unfortunately, this does not work with the JavaScript implementation, see
+https://github.com/ajv-validator/ajv/issues/652.
+
+There are workarounds for this limitation of Ajv but I want to avoid people
+naïvely validating against the schema with Ajv without applying the necessary
+workaround. It looks simpler to require all amounts to be formatted
+beforehand by the software that generates the input data.
+
+The problem for percentages is the same only that percentages can have up
+to four decimal digits.
+
+For other numerical types, like quantities, we could use numbers but for
+consistency we use strings throughout the schema.
+
 ## License
 
 This is free software available under the terms of the

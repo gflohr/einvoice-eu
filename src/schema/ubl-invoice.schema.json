@@ -234,6 +234,10 @@
 								},
 								"required": [],
 								"dependentRequired": {
+									"cbc:EmbeddedDocumentBinaryObject": [
+										"cbc:EmbeddedDocumentBinaryObject@mimeCode",
+										"cbc:EmbeddedDocumentBinaryObject@filename"
+									],
 									"cbc:EmbeddedDocumentBinaryObject@mimeCode": [
 										"cbc:EmbeddedDocumentBinaryObject"
 									],
@@ -462,6 +466,7 @@
 								"cac:PartyLegalEntity"
 							],
 							"dependentRequired": {
+								"cbc:EndpointID": ["cbc:EndpointID@schemeID"],
 								"cbc:EndpointID@schemeID": ["cbc:EndpointID"]
 							}
 						}
@@ -657,6 +662,7 @@
 								"cac:PartyLegalEntity"
 							],
 							"dependentRequired": {
+								"cbc:EndpointID": ["cbc:EndpointID@schemeID"],
 								"cbc:EndpointID@schemeID": ["cbc:EndpointID"]
 							}
 						}
@@ -1129,6 +1135,8 @@
 							"cac:TaxCategory"
 						],
 						"dependentRequired": {
+							"cbc:Amount": ["cbc:Amount@currencyID"],
+							"cbc:BaseAmount": ["cbc:BaseAmount@currencyID"],
 							"cbc:Amount@currencyID": ["cbc:Amount"],
 							"cbc:BaseAmount@currencyID": ["cbc:BaseAmount"]
 						}
@@ -1216,6 +1224,8 @@
 										"cac:TaxCategory"
 									],
 									"dependentRequired": {
+										"cbc:TaxableAmount": ["cbc:TaxableAmount@currencyID"],
+										"cbc:TaxAmount": ["cbc:TaxAmount@currencyID"],
 										"cbc:TaxableAmount@currencyID": ["cbc:TaxableAmount"],
 										"cbc:TaxAmount@currencyID": ["cbc:TaxAmount"]
 									}
@@ -1224,6 +1234,7 @@
 						},
 						"required": ["cbc:TaxAmount"],
 						"dependentRequired": {
+							"cbc:TaxAmount": ["cbc:TaxAmount@currencyID"],
 							"cbc:TaxAmount@currencyID": ["cbc:TaxAmount"]
 						}
 					},
@@ -1307,6 +1318,16 @@
 						"cbc:PayableAmount"
 					],
 					"dependentRequired": {
+						"cbc:LineExtensionAmount": ["cbc:LineExtensionAmount@currencyID"],
+						"cbc:TaxExclusiveAmount": ["cbc:TaxExclusiveAmount@currencyID"],
+						"cbc:TaxInclusiveAmount": ["cbc:TaxInclusiveAmount@currencyID"],
+						"cbc:AllowanceTotalAmount": ["cbc:AllowanceTotalAmount@currencyID"],
+						"cbc:ChargeTotalAmount": ["cbc:ChargeTotalAmount@currencyID"],
+						"cbc:PrepaidAmount": ["cbc:PrepaidAmount@currencyID"],
+						"cbc:PayableRoundingAmount": [
+							"cbc:PayableRoundingAmount@currencyID"
+						],
+						"cbc:PayableAmount": ["cbc:PayableAmount@currencyID"],
 						"cbc:LineExtensionAmount@currencyID": ["cbc:LineExtensionAmount"],
 						"cbc:TaxExclusiveAmount@currencyID": ["cbc:TaxExclusiveAmount"],
 						"cbc:TaxInclusiveAmount@currencyID": ["cbc:TaxInclusiveAmount"],
@@ -1453,6 +1474,8 @@
 									},
 									"required": ["cbc:ChargeIndicator", "cbc:Amount"],
 									"dependentRequired": {
+										"cbc:Amount": ["cbc:Amount@currencyID"],
+										"cbc:BaseAmount": ["cbc:BaseAmount@currencyID"],
 										"cbc:Amount@currencyID": ["cbc:Amount"],
 										"cbc:BaseAmount@currencyID": ["cbc:BaseAmount"]
 									}
@@ -1515,6 +1538,7 @@
 										},
 										"required": ["cbc:ID"],
 										"dependentRequired": {
+											"cbc:ID": ["cbc:ID@schemeID"],
 											"cbc:ID@schemeID": ["cbc:ID"]
 										}
 									},
@@ -1556,6 +1580,9 @@
 											},
 											"required": ["cbc:ItemClassificationCode"],
 											"dependentRequired": {
+												"cbc:ItemClassificationCode": [
+													"cbc:ItemClassificationCode@listID"
+												],
 												"cbc:ItemClassificationCode@listID": [
 													"cbc:ItemClassificationCode"
 												],
@@ -1666,6 +1693,8 @@
 										},
 										"required": ["cbc:ChargeIndicator", "cbc:Amount"],
 										"dependentRequired": {
+											"cbc:Amount": ["cbc:Amount@currencyID"],
+											"cbc:BaseAmount": ["cbc:BaseAmount@currencyID"],
 											"cbc:Amount@currencyID": ["cbc:Amount"],
 											"cbc:BaseAmount@currencyID": ["cbc:BaseAmount"]
 										}
@@ -1673,6 +1702,7 @@
 								},
 								"required": ["cbc:PriceAmount"],
 								"dependentRequired": {
+									"cbc:PriceAmount": ["cbc:PriceAmount@currencyID"],
 									"cbc:PriceAmount@currencyID": ["cbc:PriceAmount"],
 									"cbc:BaseQuantity@unitCode": ["cbc:BaseQuantity"]
 								}
@@ -1686,6 +1716,8 @@
 							"cac:Price"
 						],
 						"dependentRequired": {
+							"cbc:InvoicedQuantity": ["cbc:InvoicedQuantity@unitCode"],
+							"cbc:LineExtensionAmount": ["cbc:LineExtensionAmount@currencyID"],
 							"cbc:InvoicedQuantity@unitCode": ["cbc:InvoicedQuantity"],
 							"cbc:LineExtensionAmount@currencyID": ["cbc:LineExtensionAmount"]
 						}
@@ -6043,9 +6075,8 @@
 		},
 		"dataTypes": {
 			"Amount": {
-				"type": "number",
-				"multipleOf": 0.01,
-				"minimum": 0
+				"type": "string",
+				"pattern": "^(0|[1-9][0-9]*)(.[0-9]{1,2})?$"
 			},
 			"Binary object": {
 				"type": "string",
@@ -6056,13 +6087,12 @@
 				"pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
 			},
 			"Percentage": {
-				"type": "number",
-				"multipleOf": 0.0001,
-				"minimum": 0
+				"type": "string",
+				"pattern": "^(0|[1-9][0-9]*)(.[0-9]{1,4})?$"
 			},
 			"Quantity": {
-				"type": "number",
-				"minimum": 0
+				"type": "string",
+				"pattern": "^(0|[1-9][0-9]*)(.[0-9]+)?$"
 			}
 		}
 	}

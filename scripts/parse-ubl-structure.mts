@@ -42,9 +42,8 @@ const $defs = {
 	codeLists,
 	dataTypes: {
 		Amount: {
-			type: 'number',
-			multipleOf: 0.01,
-			minimum: 0,
+			type: 'string',
+			pattern: '^(0|[1-9][0-9]*)(\.[0-9]{1,2})?$',
 		},
 		'Binary object': {
 			type: 'string',
@@ -57,15 +56,14 @@ const $defs = {
 			pattern: '^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$',
 		},
 		Percentage: {
-			type: 'number',
+			type: 'string',
 			// FIXME! The ZUGFeRD documentation states that a percentage must have
 			// a maximum of 4 decimal digts. Is that correct?
-			multipleOf: 0.0001,
-			minimum: 0,
+			pattern: '^(0|[1-9][0-9]*)(\.[0-9]{1,4})?$'
 		},
 		Quantity: {
-			type: 'number',
-			minimum: 0,
+			type: 'string',
+			pattern: '^(0|[1-9][0-9]*)(\.[0-9]+)?$',
 		},
 	}
 };
@@ -151,16 +149,12 @@ function sortAttributes(element: { [key: string]: any}) {
 function fixupAttributes(node: { [key: string]: any}) {
 	if (typeof node === 'object') {
 		for (const key in node) {
-			if ('type' in node && node.type === 'object') {
+			if (key === 'type' && node.type === 'object') {
 				const attributes = Object.keys(node.properties)
 					.filter(prop => prop.includes('@'));
 				const required: Array<string> = 'required' in node ? node.required : [];
 
 				if (attributes.length) {
-					if ('required' in node) {
-						node.required = required.filter(prop => !prop.includes('@'));
-					}
-
 					node.dependentRequired = {};
 					const mandatoryAttributes = required.filter(prop => prop.includes('@'));
 
@@ -173,6 +167,10 @@ function fixupAttributes(node: { [key: string]: any}) {
 					for (const attribute of attributes) {
 						const elem = attribute.split('@')[0];
 						node.dependentRequired[attribute] = [elem];
+					}
+
+					if ('required' in node) {
+						node.required = required.filter(prop => !prop.includes('@'));
 					}
 				}
 			}
@@ -277,8 +275,11 @@ function processNode(node: Element): JSONSchemaType<object> {
 			type: 'object',
 			...common,
 			properties,
-			...(required.length > 0 && { required }),
 		} as JSONSchemaType<any>;
+
+		if (required.length) {
+			schema.required = required;
+		}
 	}
 
 	// If it's an array (max > 1 or max is infinite), modify the schema
