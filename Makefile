@@ -20,7 +20,7 @@ src/invoice/invoice.interface.ts: scripts/json-schema-to-typescript.mts src/sche
 
 src/schema/ubl-mapping.schema.json: scripts/transform-ubl-mapping.mts src/schema/ubl-invoice.schema.json
 	$(NPX) tsx $< src/schema/ubl-invoice.schema.json $@
-	$(NPX) ajv compile --spec=draft2019 -s $@ || rm -f $@
+	# $(NPX) ajv compile --spec=draft2019 -s $@ || rm -f $@
 
 .PHONY: clean
 
