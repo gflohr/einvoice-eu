@@ -13,4 +13,4 @@ const invoiceSchemaFilename = process.argv[2];
 const invoiceSchemaYaml = fs.readFileSync(invoiceSchemaFilename, 'utf-8');
 const invoiceSchema = yaml.load(invoiceSchemaYaml, { filename: invoiceSchemaFilename });
 
-console.log(invoiceSchema);
+console.warn(invoiceSchema);
