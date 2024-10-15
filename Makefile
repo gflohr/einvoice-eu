@@ -7,12 +7,16 @@ INVOICE_SCHEMA_DEPENDENCIES = \
 	peppol-bis-invoice-3/structure/codelist/*.xml
 
 all: \
-	src/schema/ubl-invoice.schema.json
+	src/schema/ubl-invoice.schema.json \
+	src/schema/ubl-mapping.schema.json
 
 src/schema/ubl-invoice.schema.json: scripts/parse-ubl-structure.mts $(INVOICE_SCHEMA_DEPENDENCIES)
 	$(NPX) tsx $< >$@ || rm -f $@
 	$(NPX) ajv compile --spec=draft2019 -s $@ || rm -f $@
 
+src/schema/ubl-mapping.schema.json: scripts/create-ubl-mapping.mts src/schema/ubl-invoice.schema.json
+	$(NPX) tsx $< src/schema/ubl-invoice.schema.json $@
+	$(NPX) ajv compile --spec=draft2019 -s $@ || rm -f $@
 
 .PHONY: clean
 
