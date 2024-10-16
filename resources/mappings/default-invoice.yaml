@@ -1,4 +1,4 @@
 meta:
   loopColumn: K
-mapping:
+ubl:Invoice:
   id: Invoice.L15

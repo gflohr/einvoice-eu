@@ -9,7 +9,8 @@ INVOICE_SCHEMA_DEPENDENCIES = \
 all: \
 	src/schema/ubl-invoice.schema.json \
 	src/invoice/invoice.interface.ts \
-	src/schema/ubl-mapping.schema.json
+	src/schema/ubl-mapping.schema.json \
+	src/mapping/mapping.interface.ts
 
 src/schema/ubl-invoice.schema.json: scripts/parse-ubl-structure.mts $(INVOICE_SCHEMA_DEPENDENCIES)
 	$(NPX) tsx $< >$@ || rm -f $@
@@ -20,9 +21,13 @@ src/invoice/invoice.interface.ts: scripts/json-schema-to-typescript.mts src/sche
 
 src/schema/ubl-mapping.schema.json: scripts/transform-ubl-mapping.mts src/schema/ubl-invoice.schema.json
 	$(NPX) tsx $< src/schema/ubl-invoice.schema.json $@
-	# $(NPX) ajv compile --spec=draft2019 -s $@ || rm -f $@
+	$(NPX) ajv compile --spec=draft2019 -s $@ || rm -f $@
+
+src/mapping/mapping.interface.ts: scripts/json-schema-to-typescript.mts src/schema/ubl-mapping.schema.json
+	$(NPX) tsx $< src/schema/ubl-mapping.schema.json $@
 
 .PHONY: clean
 
 clean:
-	rm -f src/schema/*.json
+	rm -f src/schema/*.json \
+		src/invoice/invoice.interface.ts src/mapping/mapping.interface.ts

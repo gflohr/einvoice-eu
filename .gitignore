@@ -36,3 +36,9 @@ lerna-debug.log*
 
 # LibreOffice
 .~lock.*.ods#
+
+# External docs
+ZUGFeRD*
+
+# Java nuisances
+*-report.xml
