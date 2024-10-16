@@ -48,7 +48,6 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "semver": "^7.6.3",
-    "valibot": "^0.42.1",
     "xmlbuilder2": "^3.1.1"
   },
   "devDependencies": {
