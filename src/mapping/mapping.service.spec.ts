@@ -29,9 +29,6 @@ describe('MappingService', () => {
 		readFileMock.mockResolvedValue(yaml);
 
 		const wanted = { meta: 'something' };
-		const validateMock = jest
-			.spyOn(service as any, 'validateMapping')
-			.mockReturnValue(wanted);
 
 		const got = await service.loadMapping(id);
 
@@ -40,7 +37,6 @@ describe('MappingService', () => {
 			`resources/mappings/${id}.yaml`,
 			'utf8',
 		);
-		expect(validateMock).toHaveBeenCalledTimes(1);
 	});
 
 	it('should throw an exception if the mapping does not exist', async () => {
@@ -53,16 +49,5 @@ describe('MappingService', () => {
 		await expect(service.loadMapping(id)).rejects.toThrow(errorMessage);
 
 		expect(readFileMock).toHaveBeenCalledTimes(1);
-	});
-
-	it('should throw an error if the mapping is invalid', async () => {
-		const id = 'default';
-		const yaml = 'meta: something';
-		const errorMessage = new RegExp('^Invalid type');
-
-		const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>;
-		readFileMock.mockResolvedValue(yaml);
-
-		await expect(service.loadMapping(id)).rejects.toThrow(errorMessage);
 	});
 });

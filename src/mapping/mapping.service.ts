@@ -8,7 +8,7 @@ import { InvoiceMapping } from './mapping.interface';
 export class MappingService {
 	private readonly logger = new Logger(MappingService.name);
 
-	async loadMapping(id: string): Promise<InvoiceMapping> {
+	async loadMapping(id: string): Promise<unknown> {
 		const filename = path.join('resources', 'mappings', id + '.yaml');
 
 		const content = await fs.readFile(filename, 'utf8');
@@ -17,7 +17,7 @@ export class MappingService {
 		return this.validateMapping(data);
 	}
 
-	private validateMapping(data: unknown): InvoiceMapping {
+	validateMapping(data: unknown): InvoiceMapping {
 		return data as InvoiceMapping;
 	}
 }
