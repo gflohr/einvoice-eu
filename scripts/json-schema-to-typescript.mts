@@ -15,7 +15,12 @@ async function generateCode(name: string) {
 
 	const interfaceName = name.replace(/^(.)/, c => c.toUpperCase());
 
-	const code = `import { JSONSchemaType } from 'ajv';\n`
+	const code = '/*\n'
+	+ ` * This file is generated from '${schemaFile}'.\n`
+	+ ' * Do not edit!\n'
+	+ ' */\n'
+	+ '\n'
+	+ `import { JSONSchemaType } from 'ajv';\n`
 	+ `import { ${interfaceName} } from './${name}.interface';\n`
 	+ '\n'
 	+ `export const ${name}Schema: JSONSchemaType<${interfaceName}> = ${json}`

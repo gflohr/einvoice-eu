@@ -1,3 +1,8 @@
+/*
+ * This file is generated from 'src/schema/mapping.schema.json'.
+ * Do not edit!
+ */
+
 import { JSONSchemaType } from 'ajv';
 import { Mapping } from './mapping.interface';
 

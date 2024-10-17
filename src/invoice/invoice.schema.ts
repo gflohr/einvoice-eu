@@ -1,3 +1,8 @@
+/*
+ * This file is generated from 'src/schema/invoice.schema.json'.
+ * Do not edit!
+ */
+
 import { JSONSchemaType } from 'ajv';
 import { Invoice } from './invoice.interface';
 
