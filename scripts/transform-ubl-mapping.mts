@@ -38,12 +38,14 @@ const sectionRef = '\\[[^\\]]+\\]'; // Corrected to allow any characters except 
 // A cell reference starts with an optional tab reference with a trailing dot,
 // followed by a cell name, optionally followed by a section reference.
 const cellRef = `(?:${tabRef}\\.)?${cellName}(?:${sectionRef})?$`;
-const literal = '\\*.+';
+const literal = ':.+';
 const valueRef = `^${cellRef}|${literal}$`;
 new RegExp(valueRef);
 
 const invoiceSchemaYaml = fs.readFileSync(invoiceSchemaFilename, 'utf-8');
-const invoiceSchema = yaml.load(invoiceSchemaYaml, { filename: invoiceSchemaFilename }) as JSONSchemaType<Invoice>;
+const invoiceSchema = yaml.load(invoiceSchemaYaml, {
+	filename: invoiceSchemaFilename,
+}) as JSONSchemaType<Invoice>;
 transformSchema(invoiceSchema);
 
 const mappingSchema = {
@@ -63,12 +65,12 @@ const mappingSchema = {
 					type: 'object',
 					additionalProperties: false,
 					patternProperties: {
-						'^[^\'[\]*?:/\\][^[\]*?:/\\]*[^\'[\]*?:/\\]$': {
+						"^[^'[]*?:/\\][^[]*?:/\\]*[^'[]*?:/\\]$": {
 							type: 'string',
 							title: 'Column name for the section markers.',
 							description: 'This column marks the individual sections.',
 							pattern: `${columnName}`,
-						}
+						},
 					},
 					required: [],
 				},
@@ -78,15 +80,18 @@ const mappingSchema = {
 		'ubl:Invoice': invoiceSchema.properties['ubl:Invoice'],
 	},
 	required: ['meta', 'ubl:Invoice'],
-	'$defs': {
-		'valueRef': {
+	$defs: {
+		valueRef: {
 			type: 'string',
 			pattern: valueRef,
 		},
-	}
+	},
 };
 
-fs.writeFileSync(mappingSchemaFilename, JSON.stringify(mappingSchema, null, '\t'));
+fs.writeFileSync(
+	mappingSchemaFilename,
+	JSON.stringify(mappingSchema, null, '\t'),
+);
 
 function transformSchema(schema: JSONSchemaType<any>): void {
 	// Transform properties if they exist

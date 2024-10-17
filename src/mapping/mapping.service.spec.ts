@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MappingService } from './mapping.service';
 import * as fs from 'fs/promises';
+import { ValidationService } from '../validation/validation.service';
 
 jest.mock('fs/promises');
 
@@ -9,7 +10,16 @@ describe('MappingService', () => {
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			providers: [MappingService],
+			providers: [
+				MappingService,
+				ValidationService,
+				{
+					provide: 'ValidationService',
+					useValue: {
+						validate: jest.fn(),
+					}
+				}
+			],
 		}).compile();
 
 		service = module.get<MappingService>(MappingService);
@@ -28,6 +38,10 @@ describe('MappingService', () => {
 		const readFileMock = fs.readFile as jest.MockedFunction<typeof fs.readFile>;
 		readFileMock.mockResolvedValue(yaml);
 
+		const validateMock = jest
+			.spyOn(ValidationService.prototype, 'validate')
+			.mockImplementation((id, validatorFunction, data) => data);
+
 		const wanted = { meta: 'something' };
 
 		const got = await service.loadMapping(id);
@@ -35,8 +49,9 @@ describe('MappingService', () => {
 		expect(got).toEqual(wanted);
 		expect(readFileMock).toHaveBeenCalledWith(
 			`resources/mappings/${id}.yaml`,
-			'utf8',
+			'utf-8',
 		);
+		expect(validateMock).toHaveBeenCalledTimes(1);
 	});
 
 	it('should throw an exception if the mapping does not exist', async () => {

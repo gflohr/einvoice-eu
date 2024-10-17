@@ -1,4 +1,7 @@
 meta:
-  loopColumn: K
+  sectionColumn: K
 ubl:Invoice:
-  id: Invoice.L15
+  cac:LegalMonetaryTotal:
+    cbc:LineExtensionAmount: J1[Footer]
+    cbc:LineExtensionAmount@currencyID: :EUR
+  cac:InvoiceLine: {}

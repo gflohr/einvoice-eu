@@ -7,7 +7,7 @@ Mappings map cells from an invoice spreadsheet file to invoice data.
 	- [General Structure](#general-structure)
 		- [The `meta` Object](#the-meta-object)
 			- [The `meta.sectionColumn` Object](#the-metasectioncolumn-object)
-		- [The `ublInvoice` Object](#the-ublinvoice-object)
+		- [The `ubl:Invoice` Object](#the-ublinvoice-object)
 			- [Tab References](#tab-references)
 			- [Cell Reference](#cell-reference)
 			- [Section Reference](#section-reference)
@@ -37,7 +37,7 @@ letter `A` to `Z`.
 
 The meaning of this key becomes later.
 
-### The `ublInvoice` Object
+### The `ubl:Invoice` Object
 
 Did we say that a mapping maps cells to invoice data? It is actually the other
 way round.  The invoice data is mapped from a reference to the invoice data to
@@ -49,11 +49,6 @@ Another difference is that there are no arrays but data inside an array is
 directly mapped to the first item of that array.  This will also become clearer
 later.
 
-To make writing mappings easier, the color (`:`) present in all key names of
-invoice data is omitted. Instead, the first three lowercase characters are
-the part in front of the key name, for example `ubl:Invoice` becomes
-`ublInvoice`.
-
 Let's look at an excerpt of an actual mapping:
 
 ```yaml
@@ -61,27 +56,27 @@ meta:
 	sectionColumn:
 		# The section column of tab "Invoice" is "K".
 		Invoice: K
-ublInvoice:
+ubl:Invoice:
 	# The invoice id is found in the cell D7 of the tab "Invoice".
-	cbcID: Invoice.D7
+	cbc:ID: Invoice.D7
 	# The tab can be omitted and defaults to the first tab of the spreadsheet.
-	cbcIssueDate: F7
+	cbc:IssueDate: F7
 	# ... more properties following.
 	# The property `cac:InvoiceLine` is actually an array.
-	cacInvoiceLine:
+	cac:InvoiceLine:
 		# But we directly map to the first item.  The id of an invoice line
 		# is actually not in cell A1 but in column A of the 1st row of the
 		# section "Invoice Items".
-		cbcID: Invoice.A1[Invoice Items]
+		cbc:ID: Invoice.A1[Invoice Items]
 		# ... more properties following
-		cacItem:
+		cac:Item:
 			cbcName: Invoice.B1[Invoice Items]
-		cacPrice:
-			cbcPriceAmount: Invoice.F1[Invoice Items]
+		cac:Price:
+			cbc:PriceAmount: Invoice.F1[Invoice Items]
 			# You can also hard-code values by prefixing them with an
 			# asterisk.  Here, the currency code for the item is hard-coded
 			# to "EUR".
-			cbcPriceAmount@currencyCode: *EUR
+			cbc:PriceAmount@currencyCode: :EUR
 		# ... more properties following.
 ```
 
@@ -127,8 +122,8 @@ If the section reference is omitted it is assumed that there is just one item pr
 #### Hard-Coded Values
 
 Instead of a reference to a certain cell, you can also just hard-code values.
-If you map to a string that begins with an asterisk `*`, everything following
-the asterisk is interpreted as the value.
+If you map to a string that begins with a colon `:`, everything following
+the colon is interpreted as the value.
 
 ## Examples
 
