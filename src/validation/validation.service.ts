@@ -21,7 +21,6 @@ export class ValidationService {
 	private readonly logger = new Logger(ValidationService.name);
 
 	validate<T>(id: string, f: ValidateFunction<T>, data: unknown): T {
-		console.error(`validating ${id}`);
 		if (f(data)) {
 			return data as T;
 		} else {

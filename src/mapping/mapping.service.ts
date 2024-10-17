@@ -60,8 +60,6 @@ export class MappingService {
 
 		const valid = this.validationService.validate(`mapping '${id}'`, this.validator, data);
 
-		console.error(`validation service returned ${valid}`);
-
 		return valid;
 	}
 }

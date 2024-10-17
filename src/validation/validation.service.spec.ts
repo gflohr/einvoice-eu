@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ValidationService, ValidationError } from './validation.service';
 import { ErrorObject, ValidateFunction } from 'ajv';
+import { Logger } from '@nestjs/common';
 
 describe('ValidationService', () => {
 	let service: ValidationService;
@@ -45,6 +46,8 @@ describe('ValidationService', () => {
 		];
 		(mockValidate as unknown as jest.Mock).mockReturnValue(false);
 		mockValidate.errors = errors;
+
+		jest.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
 
 		expect(() => service.validate('test', mockValidate, invalidData)).toThrow(
 			ValidationError,
