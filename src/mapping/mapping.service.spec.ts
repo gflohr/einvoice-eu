@@ -17,8 +17,8 @@ describe('MappingService', () => {
 					provide: 'ValidationService',
 					useValue: {
 						validate: jest.fn(),
-					}
-				}
+					},
+				},
 			],
 		}).compile();
 

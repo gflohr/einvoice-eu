@@ -58,7 +58,11 @@ export class MappingService {
 
 		const data = yaml.load(content);
 
-		const valid = this.validationService.validate(`mapping '${id}'`, this.validator, data);
+		const valid = this.validationService.validate(
+			`mapping '${id}'`,
+			this.validator,
+			data,
+		);
 
 		return valid;
 	}
