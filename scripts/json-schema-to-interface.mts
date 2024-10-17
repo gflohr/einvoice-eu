@@ -2,7 +2,6 @@
 
 import * as fs from 'fs';
 import { compile } from 'json-schema-to-typescript';
-import { LinkedJSONSchema } from 'json-schema-to-typescript/dist/src/types/JSONSchema';
 
 if (process.argv.length !== 4) {
 	console.error(`Usage: ${process.argv[1]} INPUT_SCHEMA INTERFACE`)
