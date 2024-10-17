@@ -69,7 +69,8 @@ const mappingSchema = {
 							description: 'This column marks the individual sections.',
 							pattern: `${columnName}`,
 						}
-					}
+					},
+					required: [],
 				},
 			},
 			required: ['sectionColumn'],
