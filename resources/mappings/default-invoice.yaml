@@ -1,7 +1,22 @@
 meta:
   sectionColumn: K
 ubl:Invoice:
+  cac:AccountingSupplierParty:
+    cac:Party:
+      cac:PartyLegalEntity:
+        cbc:RegistrationName: O1
+  cac:AccountCustomerParty:
+    cac:Party:
+      cac:PartyLegalEntity:
+        cbc:RegistrationName: A1
+  cac:TaxTotal: {}
   cac:LegalMonetaryTotal:
     cbc:LineExtensionAmount: J1[Footer]
     cbc:LineExtensionAmount@currencyID: :EUR
+    cbc:TaxExclusiveAmount: J1[NetTotal]
+    cbc:TaxExclusiveAmount@currencyID: :EUR
+    cbc:TaxInclusiveAmount: J1[GrandTotal]
+    cbc:TaxInclusiveAmount@currencyID: :EUR
+    cbc:PayableAmount: J1[GrandTotal]
+    cbc:PayableAmount@currencyID: :EUR
   cac:InvoiceLine: {}
