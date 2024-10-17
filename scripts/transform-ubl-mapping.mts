@@ -30,17 +30,16 @@ const tabRefQuoted = `'[^${tabNameForbiddenChars}]+'`;
 const tabRef = `(?:${tabRefUnquoted}|${tabRefQuoted})`;
 const columnName = '[A-Z]+';
 const rowName = '[1-9][0-9]*';
-const cellName = `^${columnName}${rowName}$`;
+const cellName = `${columnName}${rowName}`;
 
 // A section reference is anything enclosed in square brackets.
-const sectionRef = '\\[[^\\]]+\\]'; // Corrected to allow any characters except ']'
+const sectionRef = '\\[[^\\]]+\\]';
 
 // A cell reference starts with an optional tab reference with a trailing dot,
 // followed by a cell name, optionally followed by a section reference.
-const cellRef = `(?:${tabRef}\\.)?${cellName}(?:${sectionRef})?$`;
+const cellRef = `(?:${tabRef}\\.)?${cellName}(?:${sectionRef})?`;
 const literal = ':.+';
 const valueRef = `^${cellRef}|${literal}$`;
-new RegExp(valueRef);
 
 const invoiceSchemaYaml = fs.readFileSync(invoiceSchemaFilename, 'utf-8');
 const invoiceSchema = yaml.load(invoiceSchemaYaml, {

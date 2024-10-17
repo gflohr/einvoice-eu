@@ -1325,7 +1325,7 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 		valueRef: {
 			type: 'string',
 			pattern:
-				"^(?:(?:[^' \\t\\n\\r\\f\\v\\.[\\]*?:/\\\\]+|'[^[\\]*?:/\\\\]+')\\.)?^[A-Z]+[1-9][0-9]*$(?:\\[[^\\]]+\\])?$|:.+$",
+				"^(?:(?:[^' \\t\\n\\r\\f\\v\\.[\\]*?:/\\\\]+|'[^[\\]*?:/\\\\]+')\\.)?[A-Z]+[1-9][0-9]*(?:\\[[^\\]]+\\])?|:.+$",
 		},
 	},
 } as unknown as JSONSchemaType<Mapping>;
