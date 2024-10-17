@@ -50,7 +50,7 @@ const mappingSchema = {
 	$schema: 'https://json-schema.org/draft/2019-09/schema',
 	$id: `https://www.cantanea.com/schemas/ubl-invoice-schema-v${pkg.version}`,
 	type: 'object',
-	title: 'Invoice Mapping',
+	title: 'Mapping',
 	description: 'Maps invoice data to the cells in a spreadsheet.',
 	properties: {
 		meta: {

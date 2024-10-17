@@ -17,7 +17,7 @@ export type ValueRef = string;
 /**
  * Maps invoice data to the cells in a spreadsheet.
  */
-export interface InvoiceMapping {
+export interface Mapping {
 	meta: MappingMetaInformation;
 	'ubl:Invoice': {
 		'cbc:CustomizationID': ValueRef;

@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import * as yaml from 'js-yaml';
-import { InvoiceMapping } from './mapping.interface';
+import { Mapping } from './mapping.interface';
 
 @Injectable()
 export class MappingService {
@@ -17,7 +17,7 @@ export class MappingService {
 		return this.validateMapping(data);
 	}
 
-	validateMapping(data: unknown): InvoiceMapping {
-		return data as InvoiceMapping;
+	validateMapping(data: unknown): Mapping {
+		return data as Mapping;
 	}
 }
