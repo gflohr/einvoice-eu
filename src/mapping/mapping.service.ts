@@ -6,6 +6,7 @@ import { Mapping } from './mapping.interface';
 import Ajv2019, { ValidateFunction } from 'ajv/dist/2019';
 import { mappingSchema } from './mapping.schema';
 import { ValidationService } from '../validation/validation.service';
+import { Invoice } from '../invoice/invoice.interface';
 
 @Injectable()
 export class MappingService {
@@ -65,5 +66,12 @@ export class MappingService {
 		);
 
 		return valid;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async transform(mappingId: string, file: Express.Multer.File, format?: string): Promise<Invoice> {
+		return {
+			todo: 'yes'
+		} as unknown as Invoice;
 	}
 }
