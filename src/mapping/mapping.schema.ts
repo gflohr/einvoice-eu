@@ -23,7 +23,7 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 					type: 'object',
 					additionalProperties: false,
 					patternProperties: {
-						"^[^'[]*?:/\\][^[]*?:/\\]*[^'[]*?:/\\]$": {
+						"^(?:[^' \\t\\n\\r\\f\\v\\.[\\]*?:/\\\\]+|'[^[\\]*?:/\\\\]+')$": {
 							type: 'string',
 							title: 'Column name for the section markers.',
 							description: 'This column marks the individual sections.',
@@ -121,6 +121,7 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 							required: ['cbc:ID'],
 						},
 					},
+					required: ['cac:InvoiceDocumentReference'],
 				},
 				'cac:DespatchDocumentReference': {
 					type: 'object',
@@ -216,6 +217,10 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 							},
 						},
 					},
+					required: ['cbc:ID'],
+					dependentRequired: {
+						'cbc:ID@schemeID': ['cbc:ID'],
+					},
 				},
 				'cac:ProjectReference': {
 					type: 'object',
@@ -252,6 +257,10 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 										'cbc:ID@schemeID': {
 											$ref: '#/$defs/valueRef',
 										},
+									},
+									required: ['cbc:ID'],
+									dependentRequired: {
+										'cbc:ID@schemeID': ['cbc:ID'],
 									},
 								},
 								'cac:PartyName': {
@@ -325,6 +334,7 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 											required: ['cbc:ID'],
 										},
 									},
+									required: ['cbc:CompanyID', 'cac:TaxScheme'],
 								},
 								'cac:PartyLegalEntity': {
 									type: 'object',
@@ -836,6 +846,10 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 							},
 						},
 					},
+					required: ['cbc:PaymentMeansCode'],
+					dependentRequired: {
+						'cbc:PaymentMeansCode@name': ['cbc:PaymentMeansCode'],
+					},
 				},
 				'cac:PaymentTerms': {
 					type: 'object',
@@ -898,6 +912,13 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 							required: ['cbc:ID', 'cac:TaxScheme'],
 						},
 					},
+					required: ['cbc:ChargeIndicator', 'cbc:Amount', 'cac:TaxCategory'],
+					dependentRequired: {
+						'cbc:Amount': ['cbc:Amount@currencyID'],
+						'cbc:BaseAmount': ['cbc:BaseAmount@currencyID'],
+						'cbc:Amount@currencyID': ['cbc:Amount'],
+						'cbc:BaseAmount@currencyID': ['cbc:BaseAmount'],
+					},
 				},
 				'cac:TaxTotal': {
 					type: 'object',
@@ -953,7 +974,23 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 									required: ['cbc:ID', 'cac:TaxScheme'],
 								},
 							},
+							required: [
+								'cbc:TaxableAmount',
+								'cbc:TaxAmount',
+								'cac:TaxCategory',
+							],
+							dependentRequired: {
+								'cbc:TaxableAmount': ['cbc:TaxableAmount@currencyID'],
+								'cbc:TaxAmount': ['cbc:TaxAmount@currencyID'],
+								'cbc:TaxableAmount@currencyID': ['cbc:TaxableAmount'],
+								'cbc:TaxAmount@currencyID': ['cbc:TaxAmount'],
+							},
 						},
+					},
+					required: ['cbc:TaxAmount'],
+					dependentRequired: {
+						'cbc:TaxAmount': ['cbc:TaxAmount@currencyID'],
+						'cbc:TaxAmount@currencyID': ['cbc:TaxAmount'],
 					},
 				},
 				'cac:LegalMonetaryTotal': {
@@ -1135,6 +1172,13 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 									$ref: '#/$defs/valueRef',
 								},
 							},
+							required: ['cbc:ChargeIndicator', 'cbc:Amount'],
+							dependentRequired: {
+								'cbc:Amount': ['cbc:Amount@currencyID'],
+								'cbc:BaseAmount': ['cbc:BaseAmount@currencyID'],
+								'cbc:Amount@currencyID': ['cbc:Amount'],
+								'cbc:BaseAmount@currencyID': ['cbc:BaseAmount'],
+							},
 						},
 						'cac:Item': {
 							type: 'object',
@@ -1208,6 +1252,18 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 											$ref: '#/$defs/valueRef',
 										},
 									},
+									required: ['cbc:ItemClassificationCode'],
+									dependentRequired: {
+										'cbc:ItemClassificationCode': [
+											'cbc:ItemClassificationCode@listID',
+										],
+										'cbc:ItemClassificationCode@listID': [
+											'cbc:ItemClassificationCode',
+										],
+										'cbc:ItemClassificationCode@listVersionID': [
+											'cbc:ItemClassificationCode',
+										],
+									},
 								},
 								'cac:ClassifiedTaxCategory': {
 									type: 'object',
@@ -1244,6 +1300,7 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 											$ref: '#/$defs/valueRef',
 										},
 									},
+									required: ['cbc:Name', 'cbc:Value'],
 								},
 							},
 							required: ['cbc:Name', 'cac:ClassifiedTaxCategory'],
@@ -1302,6 +1359,19 @@ export const mappingSchema: JSONSchemaType<Mapping> = {
 								'cbc:BaseQuantity@unitCode': ['cbc:BaseQuantity'],
 							},
 						},
+					},
+					required: [
+						'cbc:ID',
+						'cbc:InvoicedQuantity',
+						'cbc:LineExtensionAmount',
+						'cac:Item',
+						'cac:Price',
+					],
+					dependentRequired: {
+						'cbc:InvoicedQuantity': ['cbc:InvoicedQuantity@unitCode'],
+						'cbc:LineExtensionAmount': ['cbc:LineExtensionAmount@currencyID'],
+						'cbc:InvoicedQuantity@unitCode': ['cbc:InvoicedQuantity'],
+						'cbc:LineExtensionAmount@currencyID': ['cbc:LineExtensionAmount'],
 					},
 				},
 			},

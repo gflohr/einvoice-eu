@@ -9,7 +9,7 @@
  * This column marks the individual sections.
  *
  * This interface was referenced by `undefined`'s JSON-Schema definition
- * via the `patternProperty` "^[^'[]*?:/\][^[]*?:/\]*[^'[]*?:/\]$".
+ * via the `patternProperty` "^(?:[^' \t\n\r\f\v\.[\]*?:/\\]+|'[^[\]*?:/\\]+')$".
  */
 export type ColumnNameForTheSectionMarkers = string;
 export type ValueRef = string;
@@ -35,7 +35,7 @@ export interface Mapping {
 		'cac:InvoicePeriod'?: DELIVERYORINVOICEPERIOD;
 		'cac:OrderReference'?: ORDERANDSALESORDERREFERENCE;
 		'cac:BillingReference'?: {
-			'cac:InvoiceDocumentReference'?: INVOICEDOCUMENTREFERENCE;
+			'cac:InvoiceDocumentReference': INVOICEDOCUMENTREFERENCE;
 			[k: string]: unknown;
 		};
 		'cac:DespatchDocumentReference'?: DESPATCHADVICEREFERENCE;
@@ -43,7 +43,7 @@ export interface Mapping {
 		'cac:OriginatorDocumentReference'?: TENDERORLOTREFERENCE;
 		'cac:ContractDocumentReference'?: CONTRACTREFERENCE;
 		'cac:AdditionalDocumentReference'?: {
-			'cbc:ID'?: ValueRef;
+			'cbc:ID': ValueRef;
 			'cbc:ID@schemeID'?: ValueRef;
 			'cbc:DocumentTypeCode'?: ValueRef;
 			'cbc:DocumentDescription'?: ValueRef;
@@ -57,7 +57,7 @@ export interface Mapping {
 		'cac:TaxRepresentativeParty'?: SELLERTAXREPRESENTATIVEPARTY;
 		'cac:Delivery'?: DELIVERYINFORMATION;
 		'cac:PaymentMeans'?: {
-			'cbc:PaymentMeansCode'?: ValueRef;
+			'cbc:PaymentMeansCode': ValueRef;
 			'cbc:PaymentMeansCode@name'?: ValueRef;
 			'cbc:PaymentID'?: ValueRef;
 			'cac:CardAccount'?: PAYMENTCARDINFORMATION;
@@ -67,55 +67,55 @@ export interface Mapping {
 		};
 		'cac:PaymentTerms'?: PAYMENTTERMS;
 		'cac:AllowanceCharge'?: {
-			'cbc:ChargeIndicator'?: ValueRef;
+			'cbc:ChargeIndicator': ValueRef;
 			'cbc:AllowanceChargeReasonCode'?: ValueRef;
 			'cbc:AllowanceChargeReason'?: ValueRef;
 			'cbc:MultiplierFactorNumeric'?: ValueRef;
-			'cbc:Amount'?: ValueRef;
+			'cbc:Amount': ValueRef;
 			'cbc:Amount@currencyID'?: ValueRef;
 			'cbc:BaseAmount'?: ValueRef;
 			'cbc:BaseAmount@currencyID'?: ValueRef;
-			'cac:TaxCategory'?: TAXCATEGORY;
+			'cac:TaxCategory': TAXCATEGORY;
 			[k: string]: unknown;
 		};
 		'cac:TaxTotal': {
-			'cbc:TaxAmount'?: ValueRef;
+			'cbc:TaxAmount': ValueRef;
 			'cbc:TaxAmount@currencyID'?: ValueRef;
 			'cac:TaxSubtotal'?: {
-				'cbc:TaxableAmount'?: ValueRef;
+				'cbc:TaxableAmount': ValueRef;
 				'cbc:TaxableAmount@currencyID'?: ValueRef;
-				'cbc:TaxAmount'?: ValueRef;
+				'cbc:TaxAmount': ValueRef;
 				'cbc:TaxAmount@currencyID'?: ValueRef;
-				'cac:TaxCategory'?: VATCATEGORY;
+				'cac:TaxCategory': VATCATEGORY;
 				[k: string]: unknown;
 			};
 			[k: string]: unknown;
 		};
 		'cac:LegalMonetaryTotal': DOCUMENTTOTALS;
 		'cac:InvoiceLine': {
-			'cbc:ID'?: ValueRef;
+			'cbc:ID': ValueRef;
 			'cbc:Note'?: ValueRef;
-			'cbc:InvoicedQuantity'?: ValueRef;
+			'cbc:InvoicedQuantity': ValueRef;
 			'cbc:InvoicedQuantity@unitCode'?: ValueRef;
-			'cbc:LineExtensionAmount'?: ValueRef;
+			'cbc:LineExtensionAmount': ValueRef;
 			'cbc:LineExtensionAmount@currencyID'?: ValueRef;
 			'cbc:AccountingCost'?: ValueRef;
 			'cac:InvoicePeriod'?: INVOICELINEPERIOD;
 			'cac:OrderLineReference'?: ORDERLINEREFERENCE;
 			'cac:DocumentReference'?: LINEOBJECTIDENTIFIER;
 			'cac:AllowanceCharge'?: {
-				'cbc:ChargeIndicator'?: ValueRef;
+				'cbc:ChargeIndicator': ValueRef;
 				'cbc:AllowanceChargeReasonCode'?: ValueRef;
 				'cbc:AllowanceChargeReason'?: ValueRef;
 				'cbc:MultiplierFactorNumeric'?: ValueRef;
-				'cbc:Amount'?: ValueRef;
+				'cbc:Amount': ValueRef;
 				'cbc:Amount@currencyID'?: ValueRef;
 				'cbc:BaseAmount'?: ValueRef;
 				'cbc:BaseAmount@currencyID'?: ValueRef;
 				[k: string]: unknown;
 			};
-			'cac:Item'?: ITEMINFORMATION;
-			'cac:Price'?: PRICEDETAILS;
+			'cac:Item': ITEMINFORMATION;
+			'cac:Price': PRICEDETAILS;
 			[k: string]: unknown;
 		};
 		[k: string]: unknown;
@@ -192,15 +192,15 @@ export interface PARTY {
 	'cbc:EndpointID': ValueRef;
 	'cbc:EndpointID@schemeID'?: ValueRef;
 	'cac:PartyIdentification'?: {
-		'cbc:ID'?: ValueRef;
+		'cbc:ID': ValueRef;
 		'cbc:ID@schemeID'?: ValueRef;
 		[k: string]: unknown;
 	};
 	'cac:PartyName'?: PARTYNAME;
 	'cac:PostalAddress': SELLERPOSTALADDRESS;
 	'cac:PartyTaxScheme'?: {
-		'cbc:CompanyID'?: ValueRef;
-		'cac:TaxScheme'?: TAXSCHEME;
+		'cbc:CompanyID': ValueRef;
+		'cac:TaxScheme': TAXSCHEME;
 		[k: string]: unknown;
 	};
 	'cac:PartyLegalEntity': PARTYLEGALENTITY;
@@ -551,15 +551,15 @@ export interface ITEMINFORMATION {
 	'cac:StandardItemIdentification'?: STANDARDITEMIDENTIFICATION;
 	'cac:OriginCountry'?: ORIGINCOUNTRY;
 	'cac:CommodityClassification'?: {
-		'cbc:ItemClassificationCode'?: ValueRef;
+		'cbc:ItemClassificationCode': ValueRef;
 		'cbc:ItemClassificationCode@listID'?: ValueRef;
 		'cbc:ItemClassificationCode@listVersionID'?: ValueRef;
 		[k: string]: unknown;
 	};
 	'cac:ClassifiedTaxCategory': LINEVATINFORMATION;
 	'cac:AdditionalItemProperty'?: {
-		'cbc:Name'?: ValueRef;
-		'cbc:Value'?: ValueRef;
+		'cbc:Name': ValueRef;
+		'cbc:Value': ValueRef;
 		[k: string]: unknown;
 	};
 	[k: string]: unknown;

@@ -64,7 +64,7 @@ const mappingSchema = {
 					type: 'object',
 					additionalProperties: false,
 					patternProperties: {
-						"^[^'[]*?:/\\][^[]*?:/\\]*[^'[]*?:/\\]$": {
+						"^(?:[^' \\t\\n\\r\\f\\v\\.[\\]*?:/\\\\]+|'[^[\\]*?:/\\\\]+')$": {
 							type: 'string',
 							title: 'Column name for the section markers.',
 							description: 'This column marks the individual sections.',
@@ -105,13 +105,22 @@ function transformSchema(schema: JSONSchemaType<any>): void {
 				schema.properties[key] = { $ref: '#/$defs/valueRef' };
 			} else if (valueObject.type === 'array') {
 				// Convert array to object
-				let newObject: Record<string, JSONSchemaType<any>> = {};
+				const newObject: Record<string, JSONSchemaType<object>> = {
+					type: 'object',
+					properties: {},
+				} as JSONSchemaType<object>;
 				if (valueObject.items) {
 					transformSchema(valueObject.items);
-					newObject = valueObject.items.properties;
+					newObject.properties = valueObject.items.properties;
+					if (valueObject.items.required) {
+						newObject.required = valueObject.items.required;
+					}
+					if (valueObject.items.dependentRequired) {
+						newObject.dependentRequired = valueObject.items.dependentRequired;
+					}
 					delete valueObject.items;
 				}
-				schema.properties[key] = { type: 'object', properties: newObject };
+				schema.properties[key] = newObject;
 			}
 		}
 	}
