@@ -1,12 +1,29 @@
 meta:
-  sectionColumn: K
+  sectionColumn:
+    Invoice: K
 ubl:Invoice:
+  cbc:CustomizationID: :urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0
+  cbc:ProfileID: :urn:fdc:peppol.eu:2017:poacc:billing:01:1.0
+  cbc:ID: R2
+  cbc:IssueDate: I6
+  cbc:InvoiceTypeCode: :380
+  cbc:DocumentCurrencyCode: O11
   cac:AccountingSupplierParty:
     cac:Party:
+      cbc:EndpointID: O6
+      cbc:EndpointID@schemeID: :9930
+      cac:PostalAddress:
+        cac:Country:
+          cbc:IdentificationCode: O3
       cac:PartyLegalEntity:
         cbc:RegistrationName: O1
-  cac:AccountCustomerParty:
+  cac:AccountingCustomerParty:
     cac:Party:
+      cbc:EndpointID: I7
+      cbc:EndpointID@schemeID: :9930
+      cac:PostalAddress:
+        cac:Country:
+          cbc:IdentificationCode: O10
       cac:PartyLegalEntity:
         cbc:RegistrationName: A1
   cac:TaxTotal: {}
