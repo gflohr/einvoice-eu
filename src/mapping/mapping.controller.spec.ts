@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MappingController } from './mapping.controller';
 import { MappingService } from './mapping.service';
-import { NotFoundException } from '@nestjs/common';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { Invoice } from '../invoice/invoice.interface';
