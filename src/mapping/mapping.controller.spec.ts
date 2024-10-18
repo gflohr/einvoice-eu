@@ -39,14 +39,12 @@ describe('MappingController', () => {
 		const response = await request(app.getHttpServer())
 			.post('/mapping/transform/default-invoice')
 			.attach('file', Buffer.from('test data'), 'test.ods')
-			.query({ format: 'UBL' });
 
 		expect(response.status).toBe(201);
 		expect(response.body).toEqual(mockTransformedData);
 		expect(service.transform).toHaveBeenCalledWith(
 			'default-invoice',
 			expect.anything(),
-			'UBL',
 		);
 	});
 
@@ -65,7 +63,9 @@ describe('MappingController', () => {
 	});
 
 	it('should return 404 if mapping is not found', async () => {
-		jest.spyOn(service, 'transform').mockRejectedValue(new NotFoundException('Mapping ID not found'));
+		const error = new Error();
+		(error as any).code = 'ENOENT';
+		jest.spyOn(service, 'transform').mockRejectedValue(error);
 
 		const response = await request(app.getHttpServer())
 			.post('/mapping/transform/not-there')
@@ -73,9 +73,8 @@ describe('MappingController', () => {
 
 		expect(response.status).toBe(404);
 		expect(response.body).toEqual({
-			error: 'Not Found',
+			message: 'Not Found',
 			statusCode: 404,
-			message: 'Mapping ID not found',
 		});
 	});
 });

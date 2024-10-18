@@ -42,7 +42,7 @@ export class MappingService {
 		return ids;
 	}
 
-	async loadMapping(id: string): Promise<unknown> {
+	async loadMapping(id: string): Promise<Mapping> {
 		let filename = path.join(this.basePath, id + '.yaml');
 		let content: string;
 
@@ -69,9 +69,9 @@ export class MappingService {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	async transform(mappingId: string, file: Express.Multer.File, format?: string): Promise<Invoice> {
-		return {
-			todo: 'yes'
-		} as unknown as Invoice;
+	async transform(mappingId: string, file: Express.Multer.File): Promise<Invoice> {
+		const mapping = this.loadMapping(mappingId);
+
+		return mapping as unknown as Invoice;
 	}
 }

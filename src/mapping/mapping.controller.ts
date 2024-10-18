@@ -1,10 +1,10 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BadRequestException, Controller, Get, NotFoundException, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MappingService } from './mapping.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@ApiTags('mapping') // Tag for Swagger
-@Controller('mapping') // Base path for this controller
+@ApiTags('mapping')
+@Controller('mapping')
 export class MappingController {
 	constructor(private readonly mappingService: MappingService) {}
 
@@ -23,11 +23,6 @@ export class MappingController {
 		name: 'mappingId',
 		description: 'The ID of the mapping to apply.',
 		required: true,
-	})
-	@ApiQuery({
-		name: 'format',
-		description: 'One of the supported e-invoice formats unless ubl:Invoice/cbc:CustomizationID is given.',
-		required: false,
 	})
 	@ApiConsumes('multipart/form-data')
 	@ApiBody({
@@ -58,15 +53,15 @@ export class MappingController {
 	@UseInterceptors(FileInterceptor('file'))
 	async transformMapping(
 		@Param('mappingId') mappingId: string,
-		@Query('format') format: string,
 		@UploadedFile() file: Express.Multer.File,
 	) {
 		try {
-			return await this.mappingService.transform(mappingId, file, format);
+			return await this.mappingService.transform(mappingId, file);
 		} catch (error) {
-			if (error instanceof NotFoundException) {
-				throw error;
+			if (error.code && error.code === 'ENOENT') {
+				throw new NotFoundException();
 			}
+
 			throw new BadRequestException({
 				message: 'Transformation failed.',
 				details: error,
