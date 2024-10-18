@@ -82,6 +82,25 @@ to four decimal digits.
 For other numerical types, like quantities, we could use numbers but for
 consistency we use strings throughout the schema.
 
+### What is the Endpoint ID
+
+The endpoint ID is mandatory for both the seller and the buyer and identifies
+the address to which an invoice or a response to an invoice is delivered.
+It is also mandatory to specify the scheme id.
+
+Popular choices are:
+
+| schemeID  | Name                   |
+| --------- | ---------------------- |
+| 9922-9957 | VAT Number             |
+| 0088      | EAN Location Code      |
+| EM        | Electronic Mail (SMTP) |
+
+EAN Location Codes are sometimes referred to as GLN (Global Location Number).
+
+Using VAT IDs is a safe choice. If one of the parties does not have a VAT ID,
+use the email address.
+
 ## License
 
 This is free software available under the terms of the
