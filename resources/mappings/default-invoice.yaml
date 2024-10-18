@@ -26,7 +26,9 @@ ubl:Invoice:
           cbc:IdentificationCode: O10
       cac:PartyLegalEntity:
         cbc:RegistrationName: A1
-  cac:TaxTotal: {}
+  cac:TaxTotal:
+    cbc:TaxAmount: J1[TaxTotal]
+    cbc:TaxAmount@currencyID: :EUR
   cac:LegalMonetaryTotal:
     cbc:LineExtensionAmount: J1[Footer]
     cbc:LineExtensionAmount@currencyID: :EUR
@@ -36,4 +38,18 @@ ubl:Invoice:
     cbc:TaxInclusiveAmount@currencyID: :EUR
     cbc:PayableAmount: J1[GrandTotal]
     cbc:PayableAmount@currencyID: :EUR
-  cac:InvoiceLine: {}
+  cac:InvoiceLine:
+    cbc:ID: A1[InvoiceLine]
+    cbc:InvoicedQuantity: E1[InvoiceLine]
+    cbc:InvoicedQuantity@unitCode: M1[InvoiceLine]
+    cbc:LineExtensionAmount: J1[InvoiceLine]
+    cbc:LineExtensionAmount@currencyID: :EUR
+    cac:Item:
+      cbc:Name: B1[InvoiceLine]
+      cac:ClassifiedTaxCategory:
+        cbc:ID: M1[TaxSubtotal]
+        cac:TaxScheme:
+          cbc:ID: :VAT
+    cac:Price:
+      cbc:PriceAmount: F1[InvoiceLine]
+      cbc:PriceAmount@currencyID: O11
