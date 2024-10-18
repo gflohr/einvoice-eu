@@ -45,7 +45,7 @@
     "got": "^14.4.3",
     "js-yaml": "^4.1.0",
     "jsdom": "^25.0.1",
-    "jsonpath-plus": "^10.0.0",
+    "jsonpath-plus": "^10.0.6",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "semver": "^7.6.3",

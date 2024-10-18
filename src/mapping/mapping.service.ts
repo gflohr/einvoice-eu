@@ -3,11 +3,13 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import * as yaml from 'js-yaml';
 import { Mapping, MappingMetaInformation } from './mapping.interface';
-import Ajv2019, { ValidateFunction } from 'ajv/dist/2019';
+import Ajv2019, { JSONSchemaType, ValidateFunction } from 'ajv/dist/2019';
 import { mappingSchema } from './mapping.schema';
 import { ValidationService } from '../validation/validation.service';
 import { Invoice } from '../invoice/invoice.interface';
 import * as XLSX from '@e965/xlsx';
+import * as jsonpath from 'jsonpath-plus';
+import { invoiceSchema } from '../invoice/invoice.schema';
 
 // If you change anything here, you must also change the corresponding stuff
 // in scripts/tranform-ubl-mapping.mts!
@@ -97,7 +99,7 @@ export class MappingService {
 		const invoice: { [key: string]: any } = {
 			'ubl:Invoice': {},
 		};
-		this.transformObject(invoice['ubl:Invoice'], mapping.meta, mapping['ubl:Invoice'], workbook, ['ubl:Invoice'], ['ubl:Invoice', 'propertiews']);
+		this.transformObject(invoice['ubl:Invoice'], mapping.meta, mapping['ubl:Invoice'], workbook, ['ubl:Invoice'], ['properties', 'ubl:Invoice']);
 
 		return invoice as unknown as Invoice;
 	}
@@ -115,7 +117,13 @@ export class MappingService {
 	): any {
 		for (const property in obj) {
 			if (typeof obj[property] === 'string') {
+				path.push(property);
+				schemaPath.push('properties', property);
+				//const schema = this.getSchema(schemaPath);
 				output[property] = this.resolveValue(obj[property], workbook);
+				schemaPath.pop();
+				schemaPath.pop();
+				path.pop();
 			}
 		}
 	}
@@ -156,5 +164,12 @@ export class MappingService {
 
 	private getDateValue(value: Date): string {
 		return value.toISOString().substring(0, 10);
+	}
+
+	private getSchema(path: string[]): JSONSchemaType<any> {
+		const jsonPath = ['$', ...path].join('.');
+		console.warn(`path: ${jsonPath}`);
+
+		return jsonpath.JSONPath({ path: jsonPath, json: invoiceSchema }) as JSONSchemaType<any>;
 	}
 }
