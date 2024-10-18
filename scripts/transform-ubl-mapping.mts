@@ -19,6 +19,8 @@ const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
  * Regular expressions for various things.
  */
 
+// If you change anything here, you must also change the corresponding stuff
+// in src/mapping/mapping.service.ts!
 const ws = ' \\t\\n\\r\\f\\v';
 // A tab name must not begin or end with a single quote and must not contain
 // any of the characters "[]*?:/\\".
