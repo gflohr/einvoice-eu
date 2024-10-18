@@ -32,12 +32,14 @@ describe('MappingController', () => {
 	});
 
 	it('should return transformed data successfully', async () => {
-		const mockTransformedData = { result: 'some transformed data' } as unknown as Invoice;
+		const mockTransformedData = {
+			result: 'some transformed data',
+		} as unknown as Invoice;
 		jest.spyOn(service, 'transform').mockResolvedValue(mockTransformedData);
 
 		const response = await request(app.getHttpServer())
 			.post('/mapping/transform/default-invoice')
-			.attach('file', Buffer.from('test data'), 'test.ods')
+			.attach('file', Buffer.from('test data'), 'test.ods');
 
 		expect(response.status).toBe(201);
 		expect(response.body).toEqual(mockTransformedData);
@@ -48,7 +50,9 @@ describe('MappingController', () => {
 	});
 
 	it('should return 400 if transformation fails', async () => {
-		jest.spyOn(service, 'transform').mockRejectedValue(new Error('Transformation error'));
+		jest
+			.spyOn(service, 'transform')
+			.mockRejectedValue(new Error('Transformation error'));
 
 		const response = await request(app.getHttpServer())
 			.post('/mapping/transform/test-id')

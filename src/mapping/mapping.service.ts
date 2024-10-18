@@ -93,13 +93,25 @@ export class MappingService {
 		return valid;
 	}
 
-	async transform(mappingId: string, file: Express.Multer.File): Promise<Invoice> {
+	async transform(
+		mappingId: string,
+		file: Express.Multer.File,
+	): Promise<Invoice> {
 		const mapping = await this.loadMapping(mappingId);
-		const workbook = XLSX.read(file.buffer, { type: 'buffer', cellDates: true });
+		const workbook = XLSX.read(file.buffer, {
+			type: 'buffer',
+			cellDates: true,
+		});
 		const invoice: { [key: string]: any } = {
 			'ubl:Invoice': {},
 		};
-		this.transformObject(invoice['ubl:Invoice'], mapping.meta, mapping['ubl:Invoice'], workbook, ['ubl:Invoice'], ['properties', 'ubl:Invoice']);
+		this.transformObject(
+			invoice['ubl:Invoice'],
+			mapping.meta,
+			mapping['ubl:Invoice'],
+			workbook,
+			['properties', 'ubl:Invoice'],
+		);
 
 		return invoice as unknown as Invoice;
 	}
@@ -111,19 +123,15 @@ export class MappingService {
 		obj: { [key: string]: any },
 		workbook: XLSX.WorkBook,
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		path: Array<string>,
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		schemaPath: Array<string>,
 	): any {
 		for (const property in obj) {
 			if (typeof obj[property] === 'string') {
-				path.push(property);
 				schemaPath.push('properties', property);
-				//const schema = this.getSchema(schemaPath);
+				//const schema = this.getSchema(schemaPath); console.warn(schema);
 				output[property] = this.resolveValue(obj[property], workbook);
 				schemaPath.pop();
 				schemaPath.pop();
-				path.pop();
 			}
 		}
 	}
@@ -147,14 +155,17 @@ export class MappingService {
 		return value;
 	}
 
-	private getCellValue(worksheet: XLSX.WorkSheet, cellName: string): string | null {
+	private getCellValue(
+		worksheet: XLSX.WorkSheet,
+		cellName: string,
+	): string | null {
 		if (!(cellName in worksheet)) {
 			return null;
 		}
 
 		const cell = worksheet[cellName];
 		//console.warn(JSON.stringify(cell, null, 2));
-		switch(cell.t) {
+		switch (cell.t) {
 			case 'd':
 				return this.getDateValue(cell.v as Date);
 			default:
@@ -170,6 +181,9 @@ export class MappingService {
 		const jsonPath = ['$', ...path].join('.');
 		console.warn(`path: ${jsonPath}`);
 
-		return jsonpath.JSONPath({ path: jsonPath, json: invoiceSchema }) as JSONSchemaType<any>;
+		return jsonpath.JSONPath({
+			path: jsonPath,
+			json: invoiceSchema,
+		}) as JSONSchemaType<any>;
 	}
 }

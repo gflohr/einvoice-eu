@@ -1,5 +1,20 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+	BadRequestException,
+	Controller,
+	Get,
+	NotFoundException,
+	Param,
+	Post,
+	UploadedFile,
+	UseInterceptors,
+} from '@nestjs/common';
+import {
+	ApiBody,
+	ApiConsumes,
+	ApiParam,
+	ApiResponse,
+	ApiTags,
+} from '@nestjs/swagger';
 import { MappingService } from './mapping.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
